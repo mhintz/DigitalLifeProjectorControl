@@ -35,7 +35,7 @@ enum class ViewState {
 
 class WindowData {
 public:
-	WindowData(WindowRef theWindow) : mId(app::getNumWindows()) {
+	WindowData(uint32_t id, WindowRef theWindow) : mId(id) {
 		mParams = params::InterfaceGl::create(theWindow, "Params", theWindow->toPixels(ivec2(200, theWindow->getHeight() - 20)));
 
 		mParams->hide();
@@ -66,7 +66,7 @@ public:
 			.setColor(Color(randColor.x, randColor.y, randColor.z));
 	}
 
-	int mId;
+	uint32_t mId;
 	ViewState mViewState = ViewState::EXTERNAL_VIEW;
 	SphereRenderType mSphereRenderType = SphereRenderType::WIREFRAME;
 	CameraPersp mCamera;
@@ -86,9 +86,12 @@ class DigitalLifeProjectorControlApp : public App {
 
 	void createNewWindow();
 
+	uint32_t mNumWindowsCreated = 0;
+
 	ciSyphon::ClientRef mSyphonClient;
 	gl::TextureRef mLatestFrame;
 	FboCubeMapLayeredRef mFrameDestination;
+
 	gl::VboMeshRef mScanSphereMesh;
 	gl::TextureRef mScanSphereTexture;
 };
@@ -98,7 +101,7 @@ void DigitalLifeProjectorControlApp::prepSettings(Settings * settings) {
 }
 
 void DigitalLifeProjectorControlApp::setup() {
-	getWindow()->setUserData<WindowData>(new WindowData(getWindow()));
+	getWindow()->setUserData<WindowData>(new WindowData(mNumWindowsCreated++, getWindow()));
 
 	mSyphonClient = ciSyphon::Client::create();
 	mSyphonClient->set("DigitalLifeServer", "DigitalLifeClient");
@@ -142,7 +145,7 @@ void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
 
 void DigitalLifeProjectorControlApp::createNewWindow() {
 	app:WindowRef newWindow = createWindow(Window::Format());
-	newWindow->setUserData<WindowData>(new WindowData(newWindow));
+	newWindow->setUserData<WindowData>(new WindowData(mNumWindowsCreated++, newWindow));
 }
 
 void DigitalLifeProjectorControlApp::update()
