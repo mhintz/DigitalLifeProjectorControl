@@ -16,38 +16,40 @@
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
-		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		25FFC5A8FEEF4BE183AC6690 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2389ADD4815E46E4B1E1ADDD /* Syphon.framework */; };
-		17308A2B4EB14FBABCE5757A /* NoiseWalker.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 119D0FFBEE224634B1B1E036 /* NoiseWalker.hpp */; };
-		49904CEBEE704239959BD8D5 /* Node.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 75BDD359003A4C389E27673E /* Node.hpp */; };
-		DB8B75873CB94E1385B1F459 /* MeshHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65B2AA31A9FD4F1C8284EA61 /* MeshHelpers.cpp */; };
-		26106E7ECC2D48E7A4215044 /* MeshHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = F7DF45191F1C4C0A87D35739 /* MeshHelpers.h */; };
-		81CE483FD2564D28BB1BB0CA /* Item.hpp in Headers */ = {isa = PBXBuildFile; fileRef = CDDA95537B0F460495C529A3 /* Item.hpp */; };
-		3582D0A8CE72408F82A68448 /* Gradient.hpp in Headers */ = {isa = PBXBuildFile; fileRef = D3D41F51C81B401197D845DF /* Gradient.hpp */; };
-		9C740D7423304F07B87586D5 /* GeomEater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B0361CF03224A2598C36D7D /* GeomEater.cpp */; };
-		67015FC68B544C2EA9BC8CB5 /* GeomEater.h in Headers */ = {isa = PBXBuildFile; fileRef = C6B4B84275C84C21A50FA04E /* GeomEater.h */; };
-		1D6A51CF6784434DB345DDE3 /* FboCubeMapLayered.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9821C5CED084719B1739911 /* FboCubeMapLayered.cpp */; };
-		8725CCF0224E4ABBB3DDE8F1 /* FboCubeMapLayered.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8FFF28272946668598496A /* FboCubeMapLayered.h */; };
 		01B43057DDB64BEB82E31ABD /* DoubleFbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC176645192549C6A0C4676F /* DoubleFbo.cpp */; };
-		E268C88676DA40DE8232368F /* DoubleFbo.h in Headers */ = {isa = PBXBuildFile; fileRef = 22D49BF2595E4DF18B08D3B3 /* DoubleFbo.h */; };
+		1D6A51CF6784434DB345DDE3 /* FboCubeMapLayered.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9821C5CED084719B1739911 /* FboCubeMapLayered.cpp */; };
+		25FFC5A8FEEF4BE183AC6690 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2389ADD4815E46E4B1E1ADDD /* Syphon.framework */; };
 		30C06A48E4414CCA9EDD21FA /* CoreMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A83D754E67C4854AB1155BB /* CoreMath.cpp */; };
-		1F7FCDDB26364E2CB6B93BF0 /* CoreMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 174C42F361C24F07A567D8B8 /* CoreMath.h */; };
-		F6F31FDB72A645F6B0B2B022 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2389ADD4815E46E4B1E1ADDD /* Syphon.framework */; };
-		CFD9571E5E4F4DBB96ABF77F /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 479D791F98FC44979C781B6B /* SyphonNameboundClient.m */; };
-		61E2DCA50BB4411BA3FD1D2C /* SyphonNameboundClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 645A55EEB3BE4E959835FBB9 /* SyphonNameboundClient.h */; };
-		88DB4883D8AA49E3A05003FA /* ServerDirectory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 129D09E377644BA1ADBABD8F /* ServerDirectory.mm */; };
-		CBA76CD4F287446784FB5D9E /* Server.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E1ACA7875C94C55A41B914A /* Server.mm */; };
-		B57666FC41664EB2A4115A9D /* Client.mm in Sources */ = {isa = PBXBuildFile; fileRef = AB6B5C21444447298B2966A8 /* Client.mm */; };
-		A531BC2F269F457188B09316 /* Syphon.h in Headers */ = {isa = PBXBuildFile; fileRef = DF860E80C8C045ED90339DEC /* Syphon.h */; };
-		35804CAEE6EB4D009BF6DFF1 /* ServerDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8A15AC5AFE4736A3E4233E /* ServerDirectory.h */; };
-		3EF747DF0BE8432BAA9FCB8F /* Server.h in Headers */ = {isa = PBXBuildFile; fileRef = 7603AE643EF544518648796F /* Server.h */; };
-		1A58EAED737E46D3BAC7855B /* Client.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F246837D89F4DE5BA5CCB03 /* Client.h */; };
-		8504F42BBF5D4EB2919873A2 /* DigitalLifeProjectorControl_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 1CC469B19C6845338BD59C86 /* DigitalLifeProjectorControl_Prefix.pch */; };
-		D8CFAA1C1274497A88788B6F /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = DEBC6BC4134D49808CBB457C /* CinderApp.icns */; };
-		A4B754276F8747A6A136A182 /* Resources.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BD21F8013E74BF4A98098E7 /* Resources.h */; };
+		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		54859907B6EB4899B2809DCF /* DigitalLifeProjectorControlApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9BD4622871E94F3F917B262E /* DigitalLifeProjectorControlApp.cpp */; };
+		88DB4883D8AA49E3A05003FA /* ServerDirectory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 129D09E377644BA1ADBABD8F /* ServerDirectory.mm */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		9C740D7423304F07B87586D5 /* GeomEater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B0361CF03224A2598C36D7D /* GeomEater.cpp */; };
+		B57666FC41664EB2A4115A9D /* Client.mm in Sources */ = {isa = PBXBuildFile; fileRef = AB6B5C21444447298B2966A8 /* Client.mm */; };
+		CBA76CD4F287446784FB5D9E /* Server.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E1ACA7875C94C55A41B914A /* Server.mm */; };
+		CFD9571E5E4F4DBB96ABF77F /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 479D791F98FC44979C781B6B /* SyphonNameboundClient.m */; };
+		D8CFAA1C1274497A88788B6F /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = DEBC6BC4134D49808CBB457C /* CinderApp.icns */; };
+		DB8B75873CB94E1385B1F459 /* MeshHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65B2AA31A9FD4F1C8284EA61 /* MeshHelpers.cpp */; };
+		EFE696431E6AE7ED00CD4E51 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE6963B1E6AE7ED00CD4E51 /* Mesh.cpp */; };
+		EFE696441E6AE7ED00CD4E51 /* MeshBuilds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE6963D1E6AE7ED00CD4E51 /* MeshBuilds.cpp */; };
+		EFE696451E6AE7ED00CD4E51 /* MeshGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE6963F1E6AE7ED00CD4E51 /* MeshGroup.cpp */; };
+		EFE696461E6AE7ED00CD4E51 /* Vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE696411E6AE7ED00CD4E51 /* Vertex.cpp */; };
+		EFE696501E6BD29D00CD4E51 /* Projector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE6964E1E6BD29D00CD4E51 /* Projector.cpp */; };
+		F6F31FDB72A645F6B0B2B022 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2389ADD4815E46E4B1E1ADDD /* Syphon.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		780FF6123C194E5D8D735BBC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				25FFC5A8FEEF4BE183AC6690 /* Syphon.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		006D720219952D00008149E2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -60,39 +62,51 @@
 		00B995581B128DF400A5C623 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		00B995591B128DF400A5C623 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		119D0FFBEE224634B1B1E036 /* NoiseWalker.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = NoiseWalker.hpp; path = "../../../cinder/blocks/core-util/NoiseWalker.hpp"; sourceTree = "<group>"; };
+		129D09E377644BA1ADBABD8F /* ServerDirectory.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ServerDirectory.mm; path = "../../../cinder/blocks/Cinder-Syphon/src/ServerDirectory.mm"; sourceTree = "<group>"; };
+		174C42F361C24F07A567D8B8 /* CoreMath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CoreMath.h; path = "../../../cinder/blocks/core-util/CoreMath.h"; sourceTree = "<group>"; };
+		1CC469B19C6845338BD59C86 /* DigitalLifeProjectorControl_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = DigitalLifeProjectorControl_Prefix.pch; sourceTree = "<group>"; };
+		22D49BF2595E4DF18B08D3B3 /* DoubleFbo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DoubleFbo.h; path = "../../../cinder/blocks/core-util/DoubleFbo.h"; sourceTree = "<group>"; };
+		2389ADD4815E46E4B1E1ADDD /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Syphon.framework; path = "../../../cinder/blocks/Cinder-Syphon/lib/Syphon.framework"; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		2A83D754E67C4854AB1155BB /* CoreMath.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = CoreMath.cpp; path = "../../../cinder/blocks/core-util/CoreMath.cpp"; sourceTree = "<group>"; };
+		3A8FFF28272946668598496A /* FboCubeMapLayered.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FboCubeMapLayered.h; path = "../../../cinder/blocks/core-util/FboCubeMapLayered.h"; sourceTree = "<group>"; };
+		479D791F98FC44979C781B6B /* SyphonNameboundClient.m */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = SyphonNameboundClient.m; path = "../../../cinder/blocks/Cinder-Syphon/lib/SyphonNameboundClient.m"; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
+		5BD21F8013E74BF4A98098E7 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		645A55EEB3BE4E959835FBB9 /* SyphonNameboundClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SyphonNameboundClient.h; path = "../../../cinder/blocks/Cinder-Syphon/lib/SyphonNameboundClient.h"; sourceTree = "<group>"; };
+		65B2AA31A9FD4F1C8284EA61 /* MeshHelpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = MeshHelpers.cpp; path = "../../../cinder/blocks/core-util/MeshHelpers.cpp"; sourceTree = "<group>"; };
+		75BDD359003A4C389E27673E /* Node.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = Node.hpp; path = "../../../cinder/blocks/core-util/Node.hpp"; sourceTree = "<group>"; };
+		7603AE643EF544518648796F /* Server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Server.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Server.h"; sourceTree = "<group>"; };
+		7F246837D89F4DE5BA5CCB03 /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Client.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.h"; sourceTree = "<group>"; };
+		8B0361CF03224A2598C36D7D /* GeomEater.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = GeomEater.cpp; path = "../../../cinder/blocks/core-util/GeomEater.cpp"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* DigitalLifeProjectorControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DigitalLifeProjectorControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9BD4622871E94F3F917B262E /* DigitalLifeProjectorControlApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = ../src/DigitalLifeProjectorControlApp.cpp; sourceTree = "<group>"; name = DigitalLifeProjectorControlApp.cpp; };
-		5BD21F8013E74BF4A98098E7 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ../include/Resources.h; sourceTree = "<group>"; name = Resources.h; };
-		DEBC6BC4134D49808CBB457C /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; name = CinderApp.icns; };
-		E4855BDB7FC54DC3B7368107 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; name = Info.plist; };
-		1CC469B19C6845338BD59C86 /* DigitalLifeProjectorControl_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = DigitalLifeProjectorControl_Prefix.pch; sourceTree = "<group>"; name = DigitalLifeProjectorControl_Prefix.pch; };
-		7F246837D89F4DE5BA5CCB03 /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.h"; sourceTree = "<group>"; name = Client.h; };
-		7603AE643EF544518648796F /* Server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Server.h"; sourceTree = "<group>"; name = Server.h; };
-		CE8A15AC5AFE4736A3E4233E /* ServerDirectory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/Cinder-Syphon/src/ServerDirectory.h"; sourceTree = "<group>"; name = ServerDirectory.h; };
-		DF860E80C8C045ED90339DEC /* Syphon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Syphon.h"; sourceTree = "<group>"; name = Syphon.h; };
-		AB6B5C21444447298B2966A8 /* Client.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.mm"; sourceTree = "<group>"; name = Client.mm; };
-		9E1ACA7875C94C55A41B914A /* Server.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "../../../cinder/blocks/Cinder-Syphon/src/Server.mm"; sourceTree = "<group>"; name = Server.mm; };
-		129D09E377644BA1ADBABD8F /* ServerDirectory.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "../../../cinder/blocks/Cinder-Syphon/src/ServerDirectory.mm"; sourceTree = "<group>"; name = ServerDirectory.mm; };
-		645A55EEB3BE4E959835FBB9 /* SyphonNameboundClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/Cinder-Syphon/lib/SyphonNameboundClient.h"; sourceTree = "<group>"; name = SyphonNameboundClient.h; };
-		479D791F98FC44979C781B6B /* SyphonNameboundClient.m */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = "../../../cinder/blocks/Cinder-Syphon/lib/SyphonNameboundClient.m"; sourceTree = "<group>"; name = SyphonNameboundClient.m; };
-		2389ADD4815E46E4B1E1ADDD /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "../../../cinder/blocks/Cinder-Syphon/lib/Syphon.framework"; sourceTree = "<group>"; name = Syphon.framework; };
-		174C42F361C24F07A567D8B8 /* CoreMath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/core-util/CoreMath.h"; sourceTree = "<group>"; name = CoreMath.h; };
-		2A83D754E67C4854AB1155BB /* CoreMath.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../../../cinder/blocks/core-util/CoreMath.cpp"; sourceTree = "<group>"; name = CoreMath.cpp; };
-		22D49BF2595E4DF18B08D3B3 /* DoubleFbo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/core-util/DoubleFbo.h"; sourceTree = "<group>"; name = DoubleFbo.h; };
-		EC176645192549C6A0C4676F /* DoubleFbo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../../../cinder/blocks/core-util/DoubleFbo.cpp"; sourceTree = "<group>"; name = DoubleFbo.cpp; };
-		3A8FFF28272946668598496A /* FboCubeMapLayered.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/core-util/FboCubeMapLayered.h"; sourceTree = "<group>"; name = FboCubeMapLayered.h; };
-		B9821C5CED084719B1739911 /* FboCubeMapLayered.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../../../cinder/blocks/core-util/FboCubeMapLayered.cpp"; sourceTree = "<group>"; name = FboCubeMapLayered.cpp; };
-		C6B4B84275C84C21A50FA04E /* GeomEater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/core-util/GeomEater.h"; sourceTree = "<group>"; name = GeomEater.h; };
-		8B0361CF03224A2598C36D7D /* GeomEater.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../../../cinder/blocks/core-util/GeomEater.cpp"; sourceTree = "<group>"; name = GeomEater.cpp; };
-		D3D41F51C81B401197D845DF /* Gradient.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = "../../../cinder/blocks/core-util/Gradient.hpp"; sourceTree = "<group>"; name = Gradient.hpp; };
-		CDDA95537B0F460495C529A3 /* Item.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = "../../../cinder/blocks/core-util/Item.hpp"; sourceTree = "<group>"; name = Item.hpp; };
-		F7DF45191F1C4C0A87D35739 /* MeshHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../../../cinder/blocks/core-util/MeshHelpers.h"; sourceTree = "<group>"; name = MeshHelpers.h; };
-		65B2AA31A9FD4F1C8284EA61 /* MeshHelpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../../../cinder/blocks/core-util/MeshHelpers.cpp"; sourceTree = "<group>"; name = MeshHelpers.cpp; };
-		75BDD359003A4C389E27673E /* Node.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = "../../../cinder/blocks/core-util/Node.hpp"; sourceTree = "<group>"; name = Node.hpp; };
-		119D0FFBEE224634B1B1E036 /* NoiseWalker.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = "../../../cinder/blocks/core-util/NoiseWalker.hpp"; sourceTree = "<group>"; name = NoiseWalker.hpp; };
+		9BD4622871E94F3F917B262E /* DigitalLifeProjectorControlApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = DigitalLifeProjectorControlApp.cpp; path = ../src/DigitalLifeProjectorControlApp.cpp; sourceTree = "<group>"; };
+		9E1ACA7875C94C55A41B914A /* Server.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Server.mm; path = "../../../cinder/blocks/Cinder-Syphon/src/Server.mm"; sourceTree = "<group>"; };
+		AB6B5C21444447298B2966A8 /* Client.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Client.mm; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.mm"; sourceTree = "<group>"; };
+		B9821C5CED084719B1739911 /* FboCubeMapLayered.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = FboCubeMapLayered.cpp; path = "../../../cinder/blocks/core-util/FboCubeMapLayered.cpp"; sourceTree = "<group>"; };
+		C6B4B84275C84C21A50FA04E /* GeomEater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GeomEater.h; path = "../../../cinder/blocks/core-util/GeomEater.h"; sourceTree = "<group>"; };
+		CDDA95537B0F460495C529A3 /* Item.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = Item.hpp; path = "../../../cinder/blocks/core-util/Item.hpp"; sourceTree = "<group>"; };
+		CE8A15AC5AFE4736A3E4233E /* ServerDirectory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ServerDirectory.h; path = "../../../cinder/blocks/Cinder-Syphon/src/ServerDirectory.h"; sourceTree = "<group>"; };
+		D3D41F51C81B401197D845DF /* Gradient.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = Gradient.hpp; path = "../../../cinder/blocks/core-util/Gradient.hpp"; sourceTree = "<group>"; };
+		DEBC6BC4134D49808CBB457C /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		DF860E80C8C045ED90339DEC /* Syphon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Syphon.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Syphon.h"; sourceTree = "<group>"; };
+		E4855BDB7FC54DC3B7368107 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EC176645192549C6A0C4676F /* DoubleFbo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = DoubleFbo.cpp; path = "../../../cinder/blocks/core-util/DoubleFbo.cpp"; sourceTree = "<group>"; };
+		EFE696391E6AE7ED00CD4E51 /* buildmesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = buildmesh.h; path = ../../../cpp/buildmesh/buildmesh.h; sourceTree = "<group>"; };
+		EFE6963A1E6AE7ED00CD4E51 /* MathBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathBase.h; path = ../../../cpp/buildmesh/MathBase.h; sourceTree = "<group>"; };
+		EFE6963B1E6AE7ED00CD4E51 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mesh.cpp; path = ../../../cpp/buildmesh/Mesh.cpp; sourceTree = "<group>"; };
+		EFE6963C1E6AE7ED00CD4E51 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mesh.h; path = ../../../cpp/buildmesh/Mesh.h; sourceTree = "<group>"; };
+		EFE6963D1E6AE7ED00CD4E51 /* MeshBuilds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeshBuilds.cpp; path = ../../../cpp/buildmesh/MeshBuilds.cpp; sourceTree = "<group>"; };
+		EFE6963E1E6AE7ED00CD4E51 /* MeshBuilds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MeshBuilds.h; path = ../../../cpp/buildmesh/MeshBuilds.h; sourceTree = "<group>"; };
+		EFE6963F1E6AE7ED00CD4E51 /* MeshGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeshGroup.cpp; path = ../../../cpp/buildmesh/MeshGroup.cpp; sourceTree = "<group>"; };
+		EFE696401E6AE7ED00CD4E51 /* MeshGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MeshGroup.h; path = ../../../cpp/buildmesh/MeshGroup.h; sourceTree = "<group>"; };
+		EFE696411E6AE7ED00CD4E51 /* Vertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Vertex.cpp; path = ../../../cpp/buildmesh/Vertex.cpp; sourceTree = "<group>"; };
+		EFE696421E6AE7ED00CD4E51 /* Vertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vertex.h; path = ../../../cpp/buildmesh/Vertex.h; sourceTree = "<group>"; };
+		EFE6964E1E6BD29D00CD4E51 /* Projector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Projector.cpp; path = "../../../cinder/blocks/core-util/Projector.cpp"; sourceTree = "<group>"; };
+		EFE6964F1E6BD29D00CD4E51 /* Projector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Projector.h; path = "../../../cinder/blocks/core-util/Projector.h"; sourceTree = "<group>"; };
+		F7DF45191F1C4C0A87D35739 /* MeshHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MeshHelpers.h; path = "../../../cinder/blocks/core-util/MeshHelpers.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,12 +132,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01B97315FEAEA392516A2CEA /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				EFE696471E6AE7F000CD4E51 /* buildmesh */,
+				C7BF6247EB884516818CE236 /* Syphon */,
+				0E3E5769B20F4DA3AEFF9414 /* core-util */,
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
 				9BD4622871E94F3F917B262E /* DigitalLifeProjectorControlApp.cpp */,
 			);
 			name = Source;
+			sourceTree = "<group>";
+		};
+		0E3E5769B20F4DA3AEFF9414 /* core-util */ = {
+			isa = PBXGroup;
+			children = (
+				EFE6964E1E6BD29D00CD4E51 /* Projector.cpp */,
+				EFE6964F1E6BD29D00CD4E51 /* Projector.h */,
+				174C42F361C24F07A567D8B8 /* CoreMath.h */,
+				2A83D754E67C4854AB1155BB /* CoreMath.cpp */,
+				22D49BF2595E4DF18B08D3B3 /* DoubleFbo.h */,
+				EC176645192549C6A0C4676F /* DoubleFbo.cpp */,
+				3A8FFF28272946668598496A /* FboCubeMapLayered.h */,
+				B9821C5CED084719B1739911 /* FboCubeMapLayered.cpp */,
+				C6B4B84275C84C21A50FA04E /* GeomEater.h */,
+				8B0361CF03224A2598C36D7D /* GeomEater.cpp */,
+				D3D41F51C81B401197D845DF /* Gradient.hpp */,
+				CDDA95537B0F460495C529A3 /* Item.hpp */,
+				F7DF45191F1C4C0A87D35739 /* MeshHelpers.h */,
+				65B2AA31A9FD4F1C8284EA61 /* MeshHelpers.cpp */,
+				75BDD359003A4C389E27673E /* Node.hpp */,
+				119D0FFBEE224634B1B1E036 /* NoiseWalker.hpp */,
+			);
+			name = "core-util";
 			sourceTree = "<group>";
 		};
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
@@ -174,69 +221,6 @@
 			name = DigitalLifeProjectorControl;
 			sourceTree = "<group>";
 		};
-		FD4C9FC9420E4EBB98C01127 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				7F246837D89F4DE5BA5CCB03 /* Client.h */,
-				7603AE643EF544518648796F /* Server.h */,
-				CE8A15AC5AFE4736A3E4233E /* ServerDirectory.h */,
-				DF860E80C8C045ED90339DEC /* Syphon.h */,
-				AB6B5C21444447298B2966A8 /* Client.mm */,
-				9E1ACA7875C94C55A41B914A /* Server.mm */,
-				129D09E377644BA1ADBABD8F /* ServerDirectory.mm */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
-		475242EB55D4453890892ABE /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				645A55EEB3BE4E959835FBB9 /* SyphonNameboundClient.h */,
-				479D791F98FC44979C781B6B /* SyphonNameboundClient.m */,
-				2389ADD4815E46E4B1E1ADDD /* Syphon.framework */,
-			);
-			name = lib;
-			sourceTree = "<group>";
-		};
-		C7BF6247EB884516818CE236 /* Syphon */ = {
-			isa = PBXGroup;
-			children = (
-				FD4C9FC9420E4EBB98C01127 /* src */,
-				475242EB55D4453890892ABE /* lib */,
-			);
-			name = Syphon;
-			sourceTree = "<group>";
-		};
-		0E3E5769B20F4DA3AEFF9414 /* core-util */ = {
-			isa = PBXGroup;
-			children = (
-				174C42F361C24F07A567D8B8 /* CoreMath.h */,
-				2A83D754E67C4854AB1155BB /* CoreMath.cpp */,
-				22D49BF2595E4DF18B08D3B3 /* DoubleFbo.h */,
-				EC176645192549C6A0C4676F /* DoubleFbo.cpp */,
-				3A8FFF28272946668598496A /* FboCubeMapLayered.h */,
-				B9821C5CED084719B1739911 /* FboCubeMapLayered.cpp */,
-				C6B4B84275C84C21A50FA04E /* GeomEater.h */,
-				8B0361CF03224A2598C36D7D /* GeomEater.cpp */,
-				D3D41F51C81B401197D845DF /* Gradient.hpp */,
-				CDDA95537B0F460495C529A3 /* Item.hpp */,
-				F7DF45191F1C4C0A87D35739 /* MeshHelpers.h */,
-				65B2AA31A9FD4F1C8284EA61 /* MeshHelpers.cpp */,
-				75BDD359003A4C389E27673E /* Node.hpp */,
-				119D0FFBEE224634B1B1E036 /* NoiseWalker.hpp */,
-			);
-			name = "core-util";
-			sourceTree = "<group>";
-		};
-		01B97315FEAEA392516A2CEA /* Blocks */ = {
-			isa = PBXGroup;
-			children = (
-				C7BF6247EB884516818CE236 /* Syphon */,
-				0E3E5769B20F4DA3AEFF9414 /* core-util */,
-			);
-			name = Blocks;
-			sourceTree = "<group>";
-		};
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +246,56 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		475242EB55D4453890892ABE /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				645A55EEB3BE4E959835FBB9 /* SyphonNameboundClient.h */,
+				479D791F98FC44979C781B6B /* SyphonNameboundClient.m */,
+				2389ADD4815E46E4B1E1ADDD /* Syphon.framework */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+		C7BF6247EB884516818CE236 /* Syphon */ = {
+			isa = PBXGroup;
+			children = (
+				FD4C9FC9420E4EBB98C01127 /* src */,
+				475242EB55D4453890892ABE /* lib */,
+			);
+			name = Syphon;
+			sourceTree = "<group>";
+		};
+		EFE696471E6AE7F000CD4E51 /* buildmesh */ = {
+			isa = PBXGroup;
+			children = (
+				EFE696391E6AE7ED00CD4E51 /* buildmesh.h */,
+				EFE6963A1E6AE7ED00CD4E51 /* MathBase.h */,
+				EFE6963B1E6AE7ED00CD4E51 /* Mesh.cpp */,
+				EFE6963C1E6AE7ED00CD4E51 /* Mesh.h */,
+				EFE6963D1E6AE7ED00CD4E51 /* MeshBuilds.cpp */,
+				EFE6963E1E6AE7ED00CD4E51 /* MeshBuilds.h */,
+				EFE6963F1E6AE7ED00CD4E51 /* MeshGroup.cpp */,
+				EFE696401E6AE7ED00CD4E51 /* MeshGroup.h */,
+				EFE696411E6AE7ED00CD4E51 /* Vertex.cpp */,
+				EFE696421E6AE7ED00CD4E51 /* Vertex.h */,
+			);
+			name = buildmesh;
+			sourceTree = "<group>";
+		};
+		FD4C9FC9420E4EBB98C01127 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				7F246837D89F4DE5BA5CCB03 /* Client.h */,
+				7603AE643EF544518648796F /* Server.h */,
+				CE8A15AC5AFE4736A3E4233E /* ServerDirectory.h */,
+				DF860E80C8C045ED90339DEC /* Syphon.h */,
+				AB6B5C21444447298B2966A8 /* Client.mm */,
+				9E1ACA7875C94C55A41B914A /* Server.mm */,
+				129D09E377644BA1ADBABD8F /* ServerDirectory.mm */,
+			);
+			name = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -291,6 +325,9 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "DigitalLifeProjectorControl" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -333,9 +370,14 @@
 				CFD9571E5E4F4DBB96ABF77F /* SyphonNameboundClient.m in Sources */,
 				30C06A48E4414CCA9EDD21FA /* CoreMath.cpp in Sources */,
 				01B43057DDB64BEB82E31ABD /* DoubleFbo.cpp in Sources */,
+				EFE696461E6AE7ED00CD4E51 /* Vertex.cpp in Sources */,
+				EFE696451E6AE7ED00CD4E51 /* MeshGroup.cpp in Sources */,
+				EFE696441E6AE7ED00CD4E51 /* MeshBuilds.cpp in Sources */,
 				1D6A51CF6784434DB345DDE3 /* FboCubeMapLayered.cpp in Sources */,
 				9C740D7423304F07B87586D5 /* GeomEater.cpp in Sources */,
 				DB8B75873CB94E1385B1F459 /* MeshHelpers.cpp in Sources */,
+				EFE696431E6AE7ED00CD4E51 /* Mesh.cpp in Sources */,
+				EFE696501E6BD29D00CD4E51 /* Projector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,17 +388,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"../../../cinder/blocks/Cinder-Syphon/lib\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = DigitalLifeProjectorControl_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = DigitalLifeProjectorControl_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -365,9 +408,6 @@
 				PRODUCT_NAME = DigitalLifeProjectorControl;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
-				FRAMEWORK_SEARCH_PATHS = (
-					"\"../../../cinder/blocks/Cinder-Syphon/lib\"",
-				);
 			};
 			name = Debug;
 		};
@@ -377,16 +417,17 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "\"../../../cinder/blocks/Cinder-Syphon/lib\"";
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = DigitalLifeProjectorControl_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
 					"$(inherited)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = DigitalLifeProjectorControl_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -396,9 +437,6 @@
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = ./build;
 				WRAPPER_EXTENSION = app;
-				FRAMEWORK_SEARCH_PATHS = (
-					"\"../../../cinder/blocks/Cinder-Syphon/lib\"",
-				);
 			};
 			name = Release;
 		};
@@ -406,13 +444,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CINDER_PATH = "../../../cinder";
+				CINDER_PATH = ../../../cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				CLANG_CXX_LIBRARY = "libc++";
 				ENABLE_TESTABILITY = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
+				HEADER_SEARCH_PATHS = (
+					"\"$(CINDER_PATH)/include\"",
+					/usr/local/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -424,12 +465,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CINDER_PATH = "../../../cinder";
+				CINDER_PATH = ../../../cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
+				HEADER_SEARCH_PATHS = (
+					"\"$(CINDER_PATH)/include\"",
+					/usr/local/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
@@ -458,16 +502,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-		780FF6123C194E5D8D735BBC /* Copy Files */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				25FFC5A8FEEF4BE183AC6690 /* Syphon.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
 }
