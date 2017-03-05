@@ -78,9 +78,58 @@ public:
 			}
 		});
 
+		mParams->addSeparator();
+
+		mParams->addText("Projector " + std::to_string(mId));
+
+		// Dividing by 10 makes the positioning more precise by that factor
+		// (precision and step functions don't work for this control)
+		mParams->addParam<vec3>("Position",
+			[this] (vec3 projPos) {
+				mProjector.moveTo(projPos / 10.0f); },
+			[this] () {
+				return mProjector.getPos() * 10.0f;
+			});
+
+		mParams->addParam<bool>("Flipped",
+			[this] (bool isFlipped) {
+				mProjector.setUpsideDown(isFlipped); },
+			[this] () {
+				return mProjector.getUpsideDown();
+			});
+
+		mParams->addParam<float>("Y Rotation",
+			[this] (float rotation) {
+				mProjector.setYRotation(rotation); },
+			[this] () {
+				return mProjector.getYRotation();
+			}).min(-M_PI / 2).max(M_PI / 2).precision(4).step(0.001f);
+
+		mParams->addParam<float>("Horizontal FoV",
+			[this] (float fov) {
+				mProjector.setHorFOV(fov);
+			}, [this] () {
+				return mProjector.getHorFOV();
+			}).min(M_PI / 16.0f).max(M_PI * 3.0 / 4.0).precision(4).step(0.001f);
+
+		mParams->addParam<float>("Vertical FoV",
+			[this] (float fov) {
+				mProjector.setVertFOV(fov);
+			}, [this] () {
+				return mProjector.getVertFOV();
+			}).min(M_PI / 16.0f).max(M_PI * 3.0 / 4.0).precision(4).step(0.001f);
+
+		mParams->addParam<float>("Vertical Offset Angle",
+			[this] (float angle) {
+				mProjector.setVertBaseAngle(angle);
+			}, [this] () {
+				return mProjector.getVertBaseAngle();
+			}).min(0.0f).max(M_PI / 2.0f).precision(4).step(0.001f);
+
 		mCamera.setAspectRatio(theWindow->getAspectRatio());
 		mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
 		mCameraUi = CameraUi(& mCamera, theWindow);
+
 		mProjector = getAcerP5515MinZoom();
 		vec3 randColor = glm::rgbColor(vec3(randFloat(360), 0.95, 0.95));
 		mProjector
