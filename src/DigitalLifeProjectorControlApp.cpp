@@ -7,6 +7,11 @@
 using namespace ci;
 using namespace ci::app;
 using std::vector;
+using std::string;
+
+JsonTree loadParams(string paramFileName);
+Projector parseProjectorParams(JsonTree const & params);
+JsonTree serializeProjector(Projector const & theProjector);
 
 enum class ViewState {
 	EXTERNAL_VIEW,
@@ -22,11 +27,27 @@ enum class SphereRenderType {
 
 class WindowData {
 public:
-	WindowData(uint32_t id, WindowRef theWindow) : mId(id) {
+	WindowData(uint32_t id, WindowRef theWindow, JsonTree paramData) : mId(id) {
 		mParams = params::InterfaceGl::create(theWindow, "Params", theWindow->toPixels(ivec2(200, theWindow->getHeight() - 20)));
 
 		mParams->hide();
 
+		setupParamsList();
+
+		mCamera.setAspectRatio(theWindow->getAspectRatio());
+		mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
+		mCameraUi = CameraUi(& mCamera, theWindow);
+
+		if (paramData.hasChildren()) {
+			mProjector = parseProjectorParams(paramData);
+		} else {
+			mProjector = getAcerP5515MinZoom();
+			vec3 randColor = glm::rgbColor(vec3(randFloat(360), 0.95, 0.95));
+			mProjector.moveTo(vec3(2, 0, randFloat() * 6.28)).setColor(Color(randColor.x, randColor.y, randColor.z));
+		}
+	}
+
+	void setupParamsList() {
 		mParams->addParam("View Mode", {
 			"External View",
 			"Projector View"
@@ -113,15 +134,12 @@ public:
 				return mProjector.getVertBaseAngle();
 			}).min(0.0f).max(M_PI / 2.0f).precision(4).step(0.001f);
 
-		mCamera.setAspectRatio(theWindow->getAspectRatio());
-		mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
-		mCameraUi = CameraUi(& mCamera, theWindow);
-
-		mProjector = getAcerP5515MinZoom();
-		vec3 randColor = glm::rgbColor(vec3(randFloat(360), 0.95, 0.95));
-		mProjector
-			.moveTo(vec3(1, 0, randFloat() * 6.28))
-			.setColor(Color(randColor.x, randColor.y, randColor.z));
+		mParams->addParam<Color>("Color",
+			[this] (Color color) {
+				mProjector.setColor(color);
+			}, [this] () {
+				return mProjector.getColor();
+			});
 	}
 
 	uint32_t mId;
@@ -156,9 +174,13 @@ class DigitalLifeProjectorControlApp : public App {
 	void draw() override;
 
 	void createNewWindow();
+	void saveParams(string paramFileName);
 
 	uint32_t mNumWindowsCreated = 0;
 	uint32_t mDestinationCubeMapSide = 1600;
+	string mParamsFile = "projectorControlParams.json";
+
+	JsonTree mParamsTree;
 
 	ciSyphon::ClientRef mSyphonClient;
 	gl::TextureRef mLatestFrame;
@@ -179,7 +201,10 @@ void DigitalLifeProjectorControlApp::prepSettings(Settings * settings) {
 
 // TODO: save and load params
 void DigitalLifeProjectorControlApp::setup() {
-	getWindow()->setUserData<WindowData>(new WindowData(mNumWindowsCreated++, getWindow()));
+	mParamsTree = loadParams(mParamsFile);
+
+	JsonTree mainWindowParams = mParamsTree.getNumChildren() > 0 ? mParamsTree.getChild(0) : JsonTree();
+	getWindow()->setUserData<WindowData>(new WindowData(mNumWindowsCreated++, getWindow(), mainWindowParams));
 
 	mSyphonClient = ciSyphon::Client::create();
 	mSyphonClient->set("DigitalLifeServer", "DigitalLifeClient");
@@ -225,12 +250,15 @@ void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
 	} else if (evt.getCode() == KeyEvent::KEY_m) {
 		auto params = getWindow()->getUserData<WindowData>()->mParams;
 		params->show(!params->isVisible());
+	} else if (evt.getCode() == KeyEvent::KEY_s) {
+		saveParams(mParamsFile);
 	}
 }
 
 void DigitalLifeProjectorControlApp::createNewWindow() {
-	app:WindowRef newWindow = createWindow(Window::Format());
-	newWindow->setUserData<WindowData>(new WindowData(mNumWindowsCreated++, newWindow));
+	JsonTree newWindowParams = mParamsTree.getNumChildren() > getNumWindows() ? mParamsTree.getChild(getNumWindows()) : JsonTree();
+	app::WindowRef newWindow = createWindow(Window::Format());
+	newWindow->setUserData<WindowData>(new WindowData(mNumWindowsCreated++, newWindow, newWindowParams));
 }
 
 void DigitalLifeProjectorControlApp::update()
@@ -331,6 +359,99 @@ void DigitalLifeProjectorControlApp::draw()
 		// gl::drawHorizontalCross(mFrameDestinationCubeMap->getColorTex(), Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 		// gl::draw(mLatestFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 	}
+}
+
+JsonTree loadParams(string paramFileName) {
+	try {
+		return JsonTree(loadAsset(paramFileName));
+	} catch (AssetLoadExc exc) {
+		app::console() << "Failed to load parameters - they probably don't exist yet : " << exc.what() << std::endl;
+	} catch (ResourceLoadExc exc) {
+		app::console() << "Failed to load parameters - they probably don't exist yet : " << exc.what() << std::endl;
+	} catch (JsonTree::ExcChildNotFound exc) {
+		app::console() << "Failed to load one of the JsonTree children: " << exc.what() << std::endl;
+	}
+	return JsonTree();
+}
+
+vec3 parseVector(JsonTree vec) {
+	return vec3(vec.getValueAtIndex<float>(0), vec.getValueAtIndex<float>(1), vec.getValueAtIndex<float>(2));
+}
+
+JsonTree serializeVector(string name, vec3 vec) {
+	return JsonTree::makeArray(name)
+		.addChild(JsonTree("", vec.x))
+		.addChild(JsonTree("", vec.y))
+		.addChild(JsonTree("", vec.z));
+}
+
+Color parseColor(JsonTree color) {
+	return Color(color.getValueAtIndex<float>(0), color.getValueAtIndex<float>(1), color.getValueAtIndex<float>(2));
+}
+
+JsonTree serializeColor(string name, Color color) {
+	return JsonTree::makeArray(name)
+		.addChild(JsonTree("", color.r))
+		.addChild(JsonTree("", color.g))
+		.addChild(JsonTree("", color.b));
+}
+
+Projector parseProjectorParams(JsonTree const & params) {
+	return Projector()
+		.setHorFOV(params.getValueForKey<float>("horFOV"))
+		.setVertFOV(params.getValueForKey<float>("vertFOV"))
+		.setVertBaseAngle(params.getValueForKey<float>("baseAngle"))
+		.moveTo(parseVector(params.getChild("position")))
+		.setUpsideDown(params.getValueForKey<bool>("isUpsideDown"))
+		.setYRotation(params.getValueForKey<float>("yRotation"))
+		.setColor(parseColor(params.getChild("color")));
+}
+
+JsonTree serializeProjector(Projector const & proj) {
+	return JsonTree()
+		.addChild(JsonTree("horFOV", proj.getHorFOV()))
+		.addChild(JsonTree("vertFOV", proj.getVertFOV()))
+		.addChild(JsonTree("baseAngle", proj.getVertBaseAngle()))
+		.addChild(serializeVector("position", proj.getPos()))
+		.addChild(JsonTree("isUpsideDown", proj.getUpsideDown()))
+		.addChild(JsonTree("yRotation", proj.getYRotation()))
+		.addChild(serializeColor("color", proj.getColor()));
+}
+
+void DigitalLifeProjectorControlApp::saveParams(string paramFileName) {
+	JsonTree appParams;
+
+	for (int winIdx = 0; winIdx < getNumWindows(); winIdx++) {
+		appParams.addChild(serializeProjector(getWindowIndex(winIdx)->getUserData<WindowData>()->mProjector));
+	}
+
+	string serializedParams = appParams.serialize();
+	std::ofstream writeFile;
+
+	// Write to local file
+	string appOwnFile = getAssetPath(paramFileName).string();
+	writeFile.open(appOwnFile);
+	std::cout << "writing params to: " << appOwnFile << std::endl;
+	writeFile << serializedParams;
+	writeFile.close();
+
+	// This code will work if you're developing in the repo.
+	// Otherwise it throws and the parameters aren't written to the local version
+	// of the parameters resource file. This is a really ugly way to do things,
+	// sometime when I'm feeling up to it, I'll dig deeper into the boost filesystem code
+	// and come up with a better way of handling this.
+	// try {
+	// 	fs::path repoFolder = fs::canonical("../../../assets");
+	// 	if (fs::is_directory(repoFolder)) {
+	// 		string repoFile = fs::canonical(repoFolder.string() + "/" + paramFileName).string();
+	// 		writeFile.open(repoFile);
+	// 		std::cout << "writing params to: " << repoFile << std::endl;
+	// 		writeFile << serializedParams;
+	// 		writeFile.close();
+	// 	}
+	// } catch (fs::filesystem_error exp) {
+	// 	app::console() << "Encountered an error while reading from a file: " << exp.what() << std::endl;
+	// }
 }
 
 CINDER_APP( DigitalLifeProjectorControlApp, RendererGl, & DigitalLifeProjectorControlApp::prepSettings )
