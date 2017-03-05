@@ -125,7 +125,7 @@ public:
 	}
 
 	uint32_t mId;
-	ViewState mViewState = ViewState::EXTERNAL_VIEW;
+	ViewState mViewState = ViewState::PROJECTOR_VIEW;
 	SphereRenderType mSphereRenderType = SphereRenderType::SYPHON_FRAME;
 
 	CameraPersp mCamera;
@@ -195,6 +195,7 @@ void DigitalLifeProjectorControlApp::setup() {
 	TriMesh sphereMesh(meshLoader, TriMesh::Format().positions().normals().texCoords0(2).texCoords1(3));
 
 	// Do some fancy stuff to set up the mesh's 3D texture coordinates
+	// TODO: do this in a script and bake these coordinates into the mesh
 	sphereMesh.getBufferTexCoords1().resize(sphereMesh.getNumVertices() * 3); // 3-dimensional tex coord
 
 	vec3 MAGIC_SPHERE_ORIGIN(0.00582, 0.31940, -0.01190); // I know this because of magic
