@@ -42,6 +42,7 @@ void main() {
     baseColor = vec4(premultLight + premultBase * (1.0 - lightFactor), lightFactor + alphaBase * (1.0 - lightFactor));
   }
 
+  baseColor.a = 1;
   FragColor = baseColor;
 
   // For testing custom cube map tex coordinates
