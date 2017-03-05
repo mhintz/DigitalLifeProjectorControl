@@ -1,17 +1,3 @@
-#include <vector>
-
-#include <glm/gtx/color_space.hpp>
-
-#include "cinder/app/App.h"
-#include "cinder/app/RendererGl.h"
-#include "cinder/gl/gl.h"
-#include "cinder/TriMesh.h"
-#include "cinder/ObjLoader.h"
-#include "cinder/Camera.h"
-#include "cinder/CameraUi.h"
-#include "cinder/params/Params.h"
-#include "cinder/Rand.h"
-
 #include "Syphon.h"
 
 #include "Projector.h"

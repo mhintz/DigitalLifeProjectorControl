@@ -10,7 +10,6 @@ out vec3 aCubeMapTexCoord;
 
 uniform mat4 ciModelMatrix;
 uniform mat4 ciModelViewProjection;
-
 uniform mat3 ciModelMatrixInverseTranspose;
 
 void main() {
