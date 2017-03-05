@@ -200,7 +200,7 @@ void DigitalLifeProjectorControlApp::setup() {
 	mFrameDestinationCubeMap = FboCubeMapLayered::create(mDestinationCubeMapSide, mDestinationCubeMapSide, FboCubeMapLayered::Format().depth(false));
 	mFrameToCubeMapConvertMesh = makeCubeMapRowLayout(mDestinationCubeMapSide);
 	mFrameToCubeMapConvertShader = gl::GlslProg::create(loadAsset("convertFrameToCubeMap_v.glsl"), loadAsset("convertFrameToCubeMap_f.glsl"), loadAsset("convertFrameToCubeMap_g.glsl"));
-	mFrameToCubeMapConvertBatch = gl::Batch::create(mFrameToCubeMapConvertMesh, mFrameToCubeMapConvertShader, { { geom::CUSTOM_0, "faceIndex" } });
+	mFrameToCubeMapConvertBatch = gl::Batch::create(mFrameToCubeMapConvertMesh, mFrameToCubeMapConvertShader, { { geom::CUSTOM_0, "faceIndex" }, { geom::CUSTOM_1, "cubeMapSideCoords" } });
 
 	// Set up the sphere mesh projection target
 	ObjLoader meshLoader(loadAsset("sphere_scan_2017_03_02/sphere_scan_2017_03_02_edited.obj"));
@@ -251,17 +251,19 @@ void DigitalLifeProjectorControlApp::update()
 	{	
 		gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mFrameDestinationCubeMap->getId());
 
+		gl::enableFaceCulling(false);
+
 		gl::ScopedViewport scpView(0, 0, mFrameDestinationCubeMap->getWidth(), mFrameDestinationCubeMap->getHeight());
 
 		gl::ScopedMatrices scpMat;
-		// TODO: Fix this so that you don't render with a wide source matrix
-		gl::setMatricesWindow(mDestinationCubeMapSide * 6, mDestinationCubeMapSide);
-		// gl::setMatricesWindow(mLatestFrame->getWidth(), mLatestFrame->getHeight());
+		// TODO: I'm not actually sure why I need to switch the y-axis here? But it does need to happen to get the tex coords right
+		gl::setMatricesWindow(mFrameDestinationCubeMap->getWidth(), mFrameDestinationCubeMap->getHeight(), false);
 
 		gl::clear(Color(0, 0, 0));
 
 		gl::ScopedTextureBind scpTex(mLatestFrame, 0);
 		mFrameToCubeMapConvertShader->uniform("uSourceTex", 0);
+		mFrameToCubeMapConvertShader->uniform("uSourceTexDims", vec2(mLatestFrame->getWidth(), mLatestFrame->getHeight()));
 
 		mFrameToCubeMapConvertBatch->draw();
 	}

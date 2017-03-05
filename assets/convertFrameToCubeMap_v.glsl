@@ -1,7 +1,7 @@
 #version 410
 
-in vec4 ciPosition;
 in vec2 ciTexCoord0;
+in vec4 cubeMapSideCoords;
 in int faceIndex;
 
 out VertexData {
@@ -14,5 +14,5 @@ uniform mat4 ciModelViewProjection;
 void main() {
   vs_out.gFaceIndex = faceIndex;
   vs_out.gTexCoord0 = ciTexCoord0;
-  gl_Position = ciModelViewProjection * ciPosition;
+  gl_Position = ciModelViewProjection * cubeMapSideCoords;
 }
