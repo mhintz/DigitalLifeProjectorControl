@@ -19,6 +19,8 @@
 	#include "cinder/CameraUi.h"
 	#include "cinder/params/Params.h"
 	#include "cinder/Rand.h"
+	#include "cinder/Json.h"
 
 	#include <vector>
+	#include <string>
 #endif
