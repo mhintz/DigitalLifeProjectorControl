@@ -24,30 +24,51 @@ using std::vector;
 enum class SphereRenderType {
 	WIREFRAME,
 	TEXTURE,
+	PROJECTOR_COVERAGE,
 	SYPHON_FRAME
 };
 
 enum class ViewState {
-	PROJECTOR_VIEW,
-	EXTERNAL_VIEW
+	EXTERNAL_VIEW,
+	PROJECTOR_VIEW
 };
 
 class WindowData {
 public:
 	WindowData(WindowRef theWindow) : mId(app::getNumWindows()) {
 		mParams = params::InterfaceGl::create(theWindow, "Params", theWindow->toPixels(ivec2(200, theWindow->getHeight() - 20)));
+
 		mParams->hide();
+
+		mParams->addParam("View Mode", {
+			"External View",
+			"Projector View"
+		}, [this] (int cfigMode) {
+			switch (cfigMode) {
+				case 0: mViewState = ViewState::EXTERNAL_VIEW; break;
+				case 1: mViewState = ViewState::PROJECTOR_VIEW; break;
+				default: throw std::invalid_argument("invalid view mode parameter");
+			}
+		}, [this] () {
+			switch (mViewState) {
+				case ViewState::EXTERNAL_VIEW: return 0;
+				case ViewState::PROJECTOR_VIEW: return 1;
+			}
+		});
+
 		mCamera.setAspectRatio(theWindow->getAspectRatio());
 		mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
 		mCameraUi = CameraUi(& mCamera, theWindow);
 		mProjector = getAcerP5515MinZoom();
 		vec3 randColor = glm::rgbColor(vec3(randFloat(360), 0.95, 0.95));
-		mProjector.moveTo(vec3(1, 0, randFloat() * 3.14)).setColor(Color(randColor.x, randColor.y, randColor.z));
+		mProjector
+			.moveTo(vec3(1, 0, randFloat() * 3.14))
+			.setColor(Color(randColor.x, randColor.y, randColor.z));
 	}
 
 	int mId;
-	SphereRenderType mSphereRenderType = SphereRenderType::WIREFRAME;
 	ViewState mViewState = ViewState::EXTERNAL_VIEW;
+	SphereRenderType mSphereRenderType = SphereRenderType::WIREFRAME;
 	CameraPersp mCamera;
 	CameraUi mCameraUi;
 	Projector mProjector;
@@ -138,6 +159,8 @@ void DigitalLifeProjectorControlApp::draw()
 
 	gl::enableDepth();
 
+	gl::enableFaceCulling(windowUserData->mViewState == ViewState::PROJECTOR_VIEW);
+
 	gl::ScopedViewport scpView(0, 0, thisWindow->getWidth(), thisWindow->getHeight());
 
 	gl::ScopedMatrices scpMat;
@@ -155,15 +178,16 @@ void DigitalLifeProjectorControlApp::draw()
 
 		gl::clear(Color(0, 0, 0));
 
-		gl::enableFaceCulling(windowUserData->mViewState == ViewState::PROJECTOR_VIEW);
-
 		if (windowUserData->mSphereRenderType == SphereRenderType::WIREFRAME) {
 			gl::ScopedColor scpColor(Color(1, 0, 0));
 			gl::ScopedPolygonMode scpPoly(GL_LINE);
 			gl::draw(mScanSphereMesh);
 		} else if (windowUserData->mSphereRenderType == SphereRenderType::TEXTURE) {
+			gl::ScopedGlslProg scpShader(gl::getStockShader(gl::ShaderDef().texture(mScanSphereTexture)));
 			gl::ScopedTextureBind scpTex(mScanSphereTexture);
 			gl::draw(mScanSphereMesh);
+		} else if (windowUserData->mSphereRenderType == SphereRenderType::PROJECTOR_COVERAGE) {
+
 		} else if (windowUserData->mSphereRenderType == SphereRenderType::SYPHON_FRAME) {
 			
 		}
