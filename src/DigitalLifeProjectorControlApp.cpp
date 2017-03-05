@@ -199,7 +199,6 @@ void DigitalLifeProjectorControlApp::prepSettings(Settings * settings) {
 
 }
 
-// TODO: save and load params
 void DigitalLifeProjectorControlApp::setup() {
 	mParamsTree = loadParams(mParamsFile);
 
