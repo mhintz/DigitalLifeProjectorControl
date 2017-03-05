@@ -177,6 +177,7 @@ void DigitalLifeProjectorControlApp::prepSettings(Settings * settings) {
 
 }
 
+// TODO: save and load params
 void DigitalLifeProjectorControlApp::setup() {
 	getWindow()->setUserData<WindowData>(new WindowData(mNumWindowsCreated++, getWindow()));
 
@@ -185,9 +186,9 @@ void DigitalLifeProjectorControlApp::setup() {
 	mSyphonClient->setup();
 
 	mFrameDestinationCubeMap = FboCubeMapLayered::create(mDestinationCubeMapSide, mDestinationCubeMapSide, FboCubeMapLayered::Format().depth(false));
-	mFrameToCubeMapConvertMesh = makeCubeMapRowLayout(mDestinationCubeMapSide);
+	mFrameToCubeMapConvertMesh = makeRowLayoutToCubeMapMesh(mDestinationCubeMapSide);
 	mFrameToCubeMapConvertShader = gl::GlslProg::create(loadAsset("convertFrameToCubeMap_v.glsl"), loadAsset("convertFrameToCubeMap_f.glsl"), loadAsset("convertFrameToCubeMap_g.glsl"));
-	mFrameToCubeMapConvertBatch = gl::Batch::create(mFrameToCubeMapConvertMesh, mFrameToCubeMapConvertShader, { { geom::CUSTOM_0, "faceIndex" }, { geom::CUSTOM_1, "cubeMapSideCoords" } });
+	mFrameToCubeMapConvertBatch = gl::Batch::create(mFrameToCubeMapConvertMesh, mFrameToCubeMapConvertShader, { { geom::CUSTOM_0, "faceIndex" } });
 
 	// Set up the sphere mesh projection target
 	ObjLoader meshLoader(loadAsset("sphere_scan_2017_03_02/sphere_scan_2017_03_02_edited.obj"));
