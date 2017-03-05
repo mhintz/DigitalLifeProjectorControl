@@ -305,6 +305,7 @@ void DigitalLifeProjectorControlApp::draw()
 			gl::ScopedGlslProg scpShader(mProjectorCoverageShader);
 			gl::draw(mScanSphereMesh);
 		} else if (windowUserData->mSphereRenderType == SphereRenderType::SYPHON_FRAME) {
+			// TODO: Make it so that this view renders the combined influence of all projectors on the object (in the external view but not the projector view)
 			gl::ScopedGlslProg scpShader(mSyphonFrameAsCubeMapRenderShader);
 			mSyphonFrameAsCubeMapRenderShader->uniform("uCubeMapTex", 0);
 			mSyphonFrameAsCubeMapRenderShader->uniform("uProjectorPos", windowUserData->mProjector.getWorldPos());

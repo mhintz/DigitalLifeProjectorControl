@@ -12,5 +12,5 @@ uniform vec3 uProjectorPos;
 void main() {
   vec3 normal = normalize(aWorldSpaceNormal);
   float lightFactor = clamp(dot(normal, normalize(uProjectorPos - aWorldSpacePosition.xyz)), 0, 1);
-  FragColor = vec4(texture(uCubeMapTex, aCubeMapTexCoord).rgb, lightFactor);
+  FragColor = vec4(lightFactor * texture(uCubeMapTex, aCubeMapTexCoord).rgb, 1);
 }
