@@ -16,6 +16,7 @@
 
 #include "Projector.h"
 #include "FboCubeMapLayered.h"
+#include "MeshHelpers.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -171,10 +172,14 @@ class DigitalLifeProjectorControlApp : public App {
 	void createNewWindow();
 
 	uint32_t mNumWindowsCreated = 0;
+	uint32_t mDestinationCubeMapSide = 1600;
 
 	ciSyphon::ClientRef mSyphonClient;
 	gl::TextureRef mLatestFrame;
-	FboCubeMapLayeredRef mFrameDestination;
+	FboCubeMapLayeredRef mFrameDestinationCubeMap;
+	gl::VboMeshRef mFrameToCubeMapConvertMesh;
+	gl::GlslProgRef mFrameToCubeMapConvertShader;
+	gl::BatchRef mFrameToCubeMapConvertBatch;
 
 	gl::VboMeshRef mScanSphereMesh;
 	gl::TextureRef mScanSphereTexture;
@@ -192,7 +197,10 @@ void DigitalLifeProjectorControlApp::setup() {
 	mSyphonClient->set("DigitalLifeServer", "DigitalLifeClient");
 	mSyphonClient->setup();
 
-	mFrameDestination = FboCubeMapLayered::create(1600, 1600, FboCubeMapLayered::Format().depth(false));
+	mFrameDestinationCubeMap = FboCubeMapLayered::create(mDestinationCubeMapSide, mDestinationCubeMapSide, FboCubeMapLayered::Format().depth(false));
+	mFrameToCubeMapConvertMesh = makeCubeMapRowLayout(mDestinationCubeMapSide);
+	mFrameToCubeMapConvertShader = gl::GlslProg::create(loadAsset("convertFrameToCubeMap_v.glsl"), loadAsset("convertFrameToCubeMap_f.glsl"), loadAsset("convertFrameToCubeMap_g.glsl"));
+	mFrameToCubeMapConvertBatch = gl::Batch::create(mFrameToCubeMapConvertMesh, mFrameToCubeMapConvertShader, { { geom::CUSTOM_0, "faceIndex" } });
 
 	// Set up the sphere mesh projection target
 	ObjLoader meshLoader(loadAsset("sphere_scan_2017_03_02/sphere_scan_2017_03_02_edited.obj"));
@@ -239,7 +247,24 @@ void DigitalLifeProjectorControlApp::update()
 {
 	mLatestFrame = mSyphonClient->fetchFrame();
 
-	// Wrap the frame to the cubemap
+	// Render the frame onto a cubemap
+	{	
+		gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mFrameDestinationCubeMap->getId());
+
+		gl::ScopedViewport scpView(0, 0, mFrameDestinationCubeMap->getWidth(), mFrameDestinationCubeMap->getHeight());
+
+		gl::ScopedMatrices scpMat;
+		// TODO: Fix this so that you don't render with a wide source matrix
+		gl::setMatricesWindow(mDestinationCubeMapSide * 6, mDestinationCubeMapSide);
+		// gl::setMatricesWindow(mLatestFrame->getWidth(), mLatestFrame->getHeight());
+
+		gl::clear(Color(0, 0, 0));
+
+		gl::ScopedTextureBind scpTex(mLatestFrame, 0);
+		mFrameToCubeMapConvertShader->uniform("uSourceTex", 0);
+
+		mFrameToCubeMapConvertBatch->draw();
+	}
 }
 
 void DigitalLifeProjectorControlApp::draw()
@@ -247,17 +272,17 @@ void DigitalLifeProjectorControlApp::draw()
 	WindowRef thisWindow = getWindow();
 	WindowData * windowUserData = thisWindow->getUserData<WindowData>();
 
+	// Do this in the draw function so that it's enabled for every window
 	gl::enableDepth();
 
 	gl::enableFaceCulling(windowUserData->mViewState == ViewState::PROJECTOR_VIEW);
 
 	gl::ScopedViewport scpView(0, 0, thisWindow->getWidth(), thisWindow->getHeight());
 
-	gl::ScopedMatrices scpMat;
-	gl::setMatricesWindow(thisWindow->getWidth(), thisWindow->getHeight());
+	gl::clear(Color(0, 0, 0));
 
 	{
-		gl::ScopedMatrices innerScope;
+		gl::ScopedMatrices scpMat;
 
 		if (windowUserData->mViewState == ViewState::EXTERNAL_VIEW) {
 			gl::setMatrices(windowUserData->mCamera);
@@ -265,8 +290,6 @@ void DigitalLifeProjectorControlApp::draw()
 			gl::setViewMatrix(windowUserData->mProjector.getViewMatrix());
 			gl::setProjectionMatrix(windowUserData->mProjector.getProjectionMatrix());
 		}
-
-		gl::clear(Color(0, 0, 0));
 
 		if (windowUserData->mSphereRenderType == SphereRenderType::WIREFRAME) {
 			gl::ScopedColor scpColor(Color(1, 0, 0));
@@ -308,6 +331,7 @@ void DigitalLifeProjectorControlApp::draw()
 
 	// Debug zone
 	{
+		gl::drawHorizontalCross(mFrameDestinationCubeMap->getColorTex(), Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 		// gl::draw(mLatestFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 	}
 }
