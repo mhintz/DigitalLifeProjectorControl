@@ -133,7 +133,7 @@ public:
 		mProjector = getAcerP5515MinZoom();
 		vec3 randColor = glm::rgbColor(vec3(randFloat(360), 0.95, 0.95));
 		mProjector
-			.moveTo(vec3(1, 0, randFloat() * 3.14))
+			.moveTo(vec3(1, 0, randFloat() * 6.28))
 			.setColor(Color(randColor.x, randColor.y, randColor.z));
 	}
 
