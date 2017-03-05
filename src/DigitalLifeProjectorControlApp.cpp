@@ -21,16 +21,16 @@ using namespace ci;
 using namespace ci::app;
 using std::vector;
 
+enum class ViewState {
+	EXTERNAL_VIEW,
+	PROJECTOR_VIEW
+};
+
 enum class SphereRenderType {
 	WIREFRAME,
 	TEXTURE,
 	PROJECTOR_COVERAGE,
 	SYPHON_FRAME
-};
-
-enum class ViewState {
-	EXTERNAL_VIEW,
-	PROJECTOR_VIEW
 };
 
 class WindowData {
@@ -43,8 +43,8 @@ public:
 		mParams->addParam("View Mode", {
 			"External View",
 			"Projector View"
-		}, [this] (int cfigMode) {
-			switch (cfigMode) {
+		}, [this] (int viewMode) {
+			switch (viewMode) {
 				case 0: mViewState = ViewState::EXTERNAL_VIEW; break;
 				case 1: mViewState = ViewState::PROJECTOR_VIEW; break;
 				default: throw std::invalid_argument("invalid view mode parameter");
@@ -53,6 +53,28 @@ public:
 			switch (mViewState) {
 				case ViewState::EXTERNAL_VIEW: return 0;
 				case ViewState::PROJECTOR_VIEW: return 1;
+			}
+		});
+
+		mParams->addParam("Render Mode", {
+			"Wireframe",
+			"Texture",
+			"Projector Coverage",
+			"Syphon Frame"
+		}, [this] (int renderMode) {
+			switch (renderMode) {
+				case 0: mSphereRenderType = SphereRenderType::WIREFRAME; break;
+				case 1: mSphereRenderType = SphereRenderType::TEXTURE; break;
+				case 2: mSphereRenderType = SphereRenderType::PROJECTOR_COVERAGE; break;
+				case 3: mSphereRenderType = SphereRenderType::SYPHON_FRAME; break;
+				default: throw std::invalid_argument("invalid render mode parameter");
+			}
+		}, [this] () {
+			switch (mSphereRenderType) {
+				case SphereRenderType::WIREFRAME : return 0;
+				case SphereRenderType::TEXTURE : return 1;
+				case SphereRenderType::PROJECTOR_COVERAGE : return 2;
+				case SphereRenderType::SYPHON_FRAME : return 3;
 			}
 		});
 
@@ -68,11 +90,24 @@ public:
 
 	uint32_t mId;
 	ViewState mViewState = ViewState::EXTERNAL_VIEW;
-	SphereRenderType mSphereRenderType = SphereRenderType::WIREFRAME;
+	SphereRenderType mSphereRenderType = SphereRenderType::PROJECTOR_COVERAGE;
+
 	CameraPersp mCamera;
 	CameraUi mCameraUi;
 	Projector mProjector;
 	params::InterfaceGlRef mParams;
+};
+
+struct ProjectorUploadData {
+	ProjectorUploadData() {};
+	ProjectorUploadData(vec3 _p, vec3 _t, Color _c) : position(_p), target(_t), color(_c.r, _c.g, _c.b) {}
+
+	vec3 position;
+	float pad1;
+	vec3 target;
+	float pad2;
+	vec3 color;
+	float pad3;
 };
 
 class DigitalLifeProjectorControlApp : public App {
@@ -94,6 +129,7 @@ class DigitalLifeProjectorControlApp : public App {
 
 	gl::VboMeshRef mScanSphereMesh;
 	gl::TextureRef mScanSphereTexture;
+	gl::GlslProgRef mProjectorCoverageShader;
 };
 
 void DigitalLifeProjectorControlApp::prepSettings(Settings * settings) {
@@ -126,6 +162,8 @@ void DigitalLifeProjectorControlApp::setup() {
 
 	mScanSphereMesh = gl::VboMesh::create(sphereMesh);
 	mScanSphereTexture = gl::Texture::create(loadImage(loadAsset("sphere_scan_2017_03_02/sphere_scan_2017_03_02.png")));
+
+	mProjectorCoverageShader = gl::GlslProg::create(loadAsset("projectorCoverage_v.glsl"), loadAsset("projectorCoverage_f.glsl"));
 }
 
 void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
@@ -190,7 +228,19 @@ void DigitalLifeProjectorControlApp::draw()
 			gl::ScopedTextureBind scpTex(mScanSphereTexture);
 			gl::draw(mScanSphereMesh);
 		} else if (windowUserData->mSphereRenderType == SphereRenderType::PROJECTOR_COVERAGE) {
+			vector<ProjectorUploadData> projectorList(getNumWindows());
+			for (int winIdx = 0; winIdx < getNumWindows(); winIdx++) {
+				Projector const & proj = getWindowIndex(winIdx)->getUserData<WindowData>()->mProjector;
+				projectorList[winIdx] = ProjectorUploadData(proj.getWorldPos(), proj.getTarget(), proj.getColor());
+			}
+			gl::UboRef projectorsUbo = gl::Ubo::create(sizeof(ProjectorUploadData) * getNumWindows(), projectorList.data());
 
+			projectorsUbo->bindBufferBase(0);
+			mProjectorCoverageShader->uniformBlock("uProjectors", 0);
+			mProjectorCoverageShader->uniform("uNumProjectors", (int) getNumWindows());
+
+			gl::ScopedGlslProg scpShader(mProjectorCoverageShader);
+			gl::draw(mScanSphereMesh);
 		} else if (windowUserData->mSphereRenderType == SphereRenderType::SYPHON_FRAME) {
 			
 		}
