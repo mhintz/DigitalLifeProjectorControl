@@ -126,7 +126,7 @@ public:
 
 	uint32_t mId;
 	ViewState mViewState = ViewState::EXTERNAL_VIEW;
-	SphereRenderType mSphereRenderType = SphereRenderType::PROJECTOR_COVERAGE;
+	SphereRenderType mSphereRenderType = SphereRenderType::SYPHON_FRAME;
 
 	CameraPersp mCamera;
 	CameraUi mCameraUi;
@@ -170,6 +170,7 @@ class DigitalLifeProjectorControlApp : public App {
 	gl::VboMeshRef mScanSphereMesh;
 	gl::TextureRef mScanSphereTexture;
 	gl::GlslProgRef mProjectorCoverageShader;
+	gl::GlslProgRef mSyphonFrameAsCubeMapRenderShader;
 };
 
 void DigitalLifeProjectorControlApp::prepSettings(Settings * settings) {
@@ -207,6 +208,7 @@ void DigitalLifeProjectorControlApp::setup() {
 	mScanSphereTexture = gl::Texture::create(loadImage(loadAsset("sphere_scan_2017_03_02/sphere_scan_2017_03_02.png")));
 
 	mProjectorCoverageShader = gl::GlslProg::create(loadAsset("projectorCoverage_v.glsl"), loadAsset("projectorCoverage_f.glsl"));
+	mSyphonFrameAsCubeMapRenderShader = gl::GlslProg::create(loadAsset("syphonFrameAsCubeMapRender_v.glsl"), loadAsset("syphonFrameAsCubeMapRender_f.glsl"));
 }
 
 void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
@@ -302,7 +304,11 @@ void DigitalLifeProjectorControlApp::draw()
 			gl::ScopedGlslProg scpShader(mProjectorCoverageShader);
 			gl::draw(mScanSphereMesh);
 		} else if (windowUserData->mSphereRenderType == SphereRenderType::SYPHON_FRAME) {
-			
+			gl::ScopedGlslProg scpShader(mSyphonFrameAsCubeMapRenderShader);
+			mSyphonFrameAsCubeMapRenderShader->uniform("uCubeMapTex", 0);
+			mSyphonFrameAsCubeMapRenderShader->uniform("uProjectorPos", windowUserData->mProjector.getWorldPos());
+			gl::ScopedTextureBind scpTex(mFrameDestinationCubeMap->getColorTex(), 0);
+			gl::draw(mScanSphereMesh);
 		}
 
 		if (windowUserData->mViewState == ViewState::EXTERNAL_VIEW) {
@@ -319,7 +325,7 @@ void DigitalLifeProjectorControlApp::draw()
 
 	// Debug zone
 	{
-		gl::drawHorizontalCross(mFrameDestinationCubeMap->getColorTex(), Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+		// gl::drawHorizontalCross(mFrameDestinationCubeMap->getColorTex(), Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 		// gl::draw(mLatestFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 	}
 }
