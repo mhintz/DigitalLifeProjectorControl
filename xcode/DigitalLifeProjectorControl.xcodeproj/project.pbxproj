@@ -35,6 +35,8 @@
 		EFE6966A1E6D9C5000CD4E51 /* MeshBuilds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE696631E6D9C5000CD4E51 /* MeshBuilds.cpp */; };
 		EFE6966B1E6D9C5000CD4E51 /* MeshGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE696651E6D9C5000CD4E51 /* MeshGroup.cpp */; };
 		EFE6966C1E6D9C5000CD4E51 /* Vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE696671E6D9C5000CD4E51 /* Vertex.cpp */; };
+		EFEA67B51E6DD13000E25BD6 /* ParamsControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFEA67B31E6DD13000E25BD6 /* ParamsControl.cpp */; };
+		EFEA67B81E6DD9EE00E25BD6 /* WindowData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFEA67B71E6DD9EE00E25BD6 /* WindowData.cpp */; };
 		F6F31FDB72A645F6B0B2B022 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2389ADD4815E46E4B1E1ADDD /* Syphon.framework */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +108,10 @@
 		EFE696661E6D9C5000CD4E51 /* MeshGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MeshGroup.h; path = ../../../cinder/blocks/buildmesh/MeshGroup.h; sourceTree = "<group>"; };
 		EFE696671E6D9C5000CD4E51 /* Vertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Vertex.cpp; path = ../../../cinder/blocks/buildmesh/Vertex.cpp; sourceTree = "<group>"; };
 		EFE696681E6D9C5000CD4E51 /* Vertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vertex.h; path = ../../../cinder/blocks/buildmesh/Vertex.h; sourceTree = "<group>"; };
+		EFEA67B31E6DD13000E25BD6 /* ParamsControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParamsControl.cpp; path = ../src/ParamsControl.cpp; sourceTree = "<group>"; };
+		EFEA67B41E6DD13000E25BD6 /* ParamsControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParamsControl.h; path = ../src/ParamsControl.h; sourceTree = "<group>"; };
+		EFEA67B61E6DD24D00E25BD6 /* WindowData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WindowData.h; path = ../src/WindowData.h; sourceTree = "<group>"; };
+		EFEA67B71E6DD9EE00E25BD6 /* WindowData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WindowData.cpp; path = ../src/WindowData.cpp; sourceTree = "<group>"; };
 		F7DF45191F1C4C0A87D35739 /* MeshHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MeshHelpers.h; path = "../../../cinder/blocks/core-util/MeshHelpers.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -145,7 +151,11 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				EFEA67B71E6DD9EE00E25BD6 /* WindowData.cpp */,
+				EFEA67B61E6DD24D00E25BD6 /* WindowData.h */,
 				9BD4622871E94F3F917B262E /* DigitalLifeProjectorControlApp.cpp */,
+				EFEA67B31E6DD13000E25BD6 /* ParamsControl.cpp */,
+				EFEA67B41E6DD13000E25BD6 /* ParamsControl.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -363,6 +373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFEA67B81E6DD9EE00E25BD6 /* WindowData.cpp in Sources */,
 				54859907B6EB4899B2809DCF /* DigitalLifeProjectorControlApp.cpp in Sources */,
 				B57666FC41664EB2A4115A9D /* Client.mm in Sources */,
 				CBA76CD4F287446784FB5D9E /* Server.mm in Sources */,
@@ -370,6 +381,7 @@
 				CFD9571E5E4F4DBB96ABF77F /* SyphonNameboundClient.m in Sources */,
 				30C06A48E4414CCA9EDD21FA /* CoreMath.cpp in Sources */,
 				EFE6966C1E6D9C5000CD4E51 /* Vertex.cpp in Sources */,
+				EFEA67B51E6DD13000E25BD6 /* ParamsControl.cpp in Sources */,
 				EFE696691E6D9C5000CD4E51 /* Mesh.cpp in Sources */,
 				01B43057DDB64BEB82E31ABD /* DoubleFbo.cpp in Sources */,
 				EFE6966A1E6D9C5000CD4E51 /* MeshBuilds.cpp in Sources */,
