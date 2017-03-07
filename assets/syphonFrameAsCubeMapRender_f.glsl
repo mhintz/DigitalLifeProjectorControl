@@ -33,7 +33,7 @@ uniform vec3 uProjectorPos;
 
 vec4 getProjectorValue(in vec3 toProjector, in vec3 normal, in vec4 color) {
   float lightFactor = clamp(dot(normal, toProjector), 0, 1);
-  return vec4(color.rgb, lightFactor);
+  return vec4(color.rgb, smoothstep(0, 1, lightFactor));
 }
 
 void main() {
