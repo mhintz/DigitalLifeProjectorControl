@@ -29,7 +29,7 @@ public:
 
 	int mId;
 
-	SphereRenderType mSphereRenderType = SphereRenderType::SYPHON_FRAME;
+	SphereRenderType mSphereRenderType = SphereRenderType::TEXTURE;
 
 	ProjectorRef mProjector;
 };
