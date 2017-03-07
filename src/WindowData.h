@@ -29,6 +29,7 @@ public:
 
 	int mId;
 
+	bool mRenderArrow = false;
 	SphereRenderType mSphereRenderType = SphereRenderType::TEXTURE;
 
 	ProjectorRef mProjector;

@@ -36,7 +36,9 @@ class DigitalLifeProjectorControlApp : public App {
 	void keyDown(KeyEvent evt) override;
 	void update() override;
 	void draw() override;
+
 	void drawSphere(SphereRenderType sphereType);
+	void renderProjectorAlignmentView();
 
 	void setupViewParams(params::InterfaceGlRef theParams);
 
@@ -286,12 +288,16 @@ void DigitalLifeProjectorControlApp::draw()
 
 		gl::ScopedFaceCulling scpCull(true, GL_BACK);
 
-		gl::ScopedMatrices scpMat;
+		if (windowUserData->mRenderArrow) {
+			renderProjectorAlignmentView();
+		} else {
+			gl::ScopedMatrices scpMat;
 
-		gl::setViewMatrix(windowUserData->mProjector->getViewMatrix());
-		gl::setProjectionMatrix(windowUserData->mProjector->getProjectionMatrix());
+			gl::setViewMatrix(windowUserData->mProjector->getViewMatrix());
+			gl::setProjectionMatrix(windowUserData->mProjector->getProjectionMatrix());
 
-		drawSphere(windowUserData->mSphereRenderType);
+			drawSphere(windowUserData->mSphereRenderType);			
+		}
 	}
 }
 
@@ -325,6 +331,83 @@ void DigitalLifeProjectorControlApp::drawSphere(SphereRenderType sphereType) {
 		// mSyphonFrameAsCubeMapRenderShader->uniform("uProjectorPos", windowUserData->mProjector->getWorldPos());
 		gl::ScopedTextureBind scpTex(mFrameDestinationCubeMap->getColorTex(), 0);
 		gl::draw(mScanSphereMesh);
+	}
+}
+
+void drawRectInPlace(float thickness, float length) {
+	gl::drawSolidRect(Rectf(-thickness, -thickness, length + thickness, thickness));
+}
+
+void drawArrow(float thickness, float length, bool pointsRight=true) {
+	float offset = sqrt(length * length / 2);
+
+	gl::pushModelMatrix();
+		if (pointsRight) { gl::translate(-offset, -offset); }
+		gl::rotate(M_PI / 4);
+		drawRectInPlace(thickness, length);
+	gl::popModelMatrix();
+	gl::pushModelMatrix();
+		if (pointsRight) { gl::translate(-offset, offset); }
+		gl::rotate(-M_PI / 4);
+		drawRectInPlace(thickness, length);
+	gl::popModelMatrix();
+}
+
+void DigitalLifeProjectorControlApp::renderProjectorAlignmentView() {
+	gl::ScopedDepth scpDepth(false);
+
+	gl::ScopedMatrices scpMat;
+	gl::setMatricesWindow(getWindowSize());
+
+	{
+		gl::ScopedColor scpColor(1, 0, 0);
+		gl::drawSolidRect(Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+	}
+
+	{
+		vec2 size = vec2(getWindowSize());
+		gl::ScopedColor scpColor(Color(1, 1, 1));
+
+		float diagonalAngle = atan2(size.y, size.x);
+		float diagonalLength = length(size);
+		float diagonalThickness = 2;
+		int numTicks = 20;
+		float tickLength = 25;
+
+		gl::pushModelMatrix();
+
+			gl::translate(vec2(0, 0));
+			gl::rotate(diagonalAngle);
+			drawRectInPlace(diagonalThickness, diagonalLength);
+
+			for (int i = 0; i < numTicks; i++) {
+				gl::pushModelMatrix();
+					float tval = (float) i / (float) (numTicks - 1);
+					vec2 position = lerp(vec2(0, 0), vec2(diagonalLength, 0), tval);
+					gl::translate(position);
+					drawArrow(diagonalThickness, tickLength, tval <= 0.5);
+				gl::popModelMatrix();
+			}
+
+		gl::popModelMatrix();
+
+		gl::pushModelMatrix();
+
+			gl::translate(vec2(0, size.y));
+			gl::rotate(-diagonalAngle);
+
+			drawRectInPlace(diagonalThickness, diagonalLength);
+
+			for (int i = 0; i < numTicks; i++) {
+				gl::pushModelMatrix();
+					float tval = (float) i / (float) (numTicks - 1);
+					vec2 position = lerp(vec2(0, 0), vec2(diagonalLength, 0), tval);
+					gl::translate(position);
+					drawArrow(diagonalThickness, tickLength, tval <= 0.5);
+				gl::popModelMatrix();
+			}
+
+		gl::popModelMatrix();
 	}
 }
 
@@ -375,16 +458,24 @@ void DigitalLifeProjectorControlApp::setupViewParams(params::InterfaceGlRef theP
 			"Wireframe",
 			"Texture",
 			"Projector Coverage",
-			"Syphon Frame"
+			"Syphon Frame",
+			"Projector Alignment"
 		}, [windowData] (int renderMode) {
+			if (renderMode == 4) {
+				windowData->mRenderArrow = true;
+			} else {
+				windowData->mRenderArrow = false;
+			}
 			switch (renderMode) {
 				case 0: windowData->mSphereRenderType = SphereRenderType::WIREFRAME; break;
 				case 1: windowData->mSphereRenderType = SphereRenderType::TEXTURE; break;
 				case 2: windowData->mSphereRenderType = SphereRenderType::PROJECTOR_COVERAGE; break;
 				case 3: windowData->mSphereRenderType = SphereRenderType::SYPHON_FRAME; break;
+				case 4: break;
 				default: app::console() << "ERROR: invalid render mode parameter provided" << std::endl; break;
 			}
 		}, [windowData] () {
+			if (windowData->mRenderArrow) { return 4; }
 			switch (windowData->mSphereRenderType) {
 				case SphereRenderType::WIREFRAME : return 0;
 				case SphereRenderType::TEXTURE : return 1;
