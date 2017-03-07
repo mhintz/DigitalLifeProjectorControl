@@ -249,24 +249,29 @@ void DigitalLifeProjectorControlApp::draw()
 
 		gl::ScopedFaceCulling scpCull(false);
 
-		gl::ScopedMatrices scpMat;
+		{
+			gl::ScopedMatrices scpMat;
 
-		gl::setMatrices(mCamera);
+			gl::setMatrices(mCamera);
 
-		drawSphere(mSphereRenderType);
+			drawSphere(mSphereRenderType);
 
-		gl::ScopedColor scpColor(Color(0.2, 0.4, 0.8));
-		gl::draw(geom::WirePlane().subdivisions(ivec2(10, 10)).size(vec2(10.0, 10.0)));
+			gl::ScopedColor scpColor(Color(0.2, 0.4, 0.8));
+			gl::draw(geom::WirePlane().subdivisions(ivec2(10, 10)).size(vec2(10.0, 10.0)));
 
-		for (auto winData : getSubWindowDataVec()) {
-			winData->mProjector->draw();
+			for (auto winData : getSubWindowDataVec()) {
+				winData->mProjector->draw();
+			}
+
 		}
 
 		mMenu->draw();
 
 		// Debug zone
 		{
-			gl::drawHorizontalCross(mFrameDestinationCubeMap->getColorTex(), Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+			gl::drawString(std::to_string(getAverageFps()), vec2(getWindowWidth() - 100.0f, getWindowHeight() - 30.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
+
+			// gl::drawHorizontalCross(mFrameDestinationCubeMap->getColorTex(), Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 			// gl::draw(mLatestFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 		}
 	} else {
@@ -291,7 +296,7 @@ void DigitalLifeProjectorControlApp::draw()
 }
 
 void DigitalLifeProjectorControlApp::drawSphere(SphereRenderType sphereType) {
-	// Draw the sphere
+	// Draw the sphere itself
 	if (sphereType == SphereRenderType::WIREFRAME) {
 		gl::ScopedColor scpColor(Color(1, 0, 0));
 		gl::ScopedPolygonMode scpPoly(GL_LINE);
