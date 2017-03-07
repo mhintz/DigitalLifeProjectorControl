@@ -4,11 +4,6 @@
 
 #include "Projector.h"
 
-enum class ViewState {
-	EXTERNAL_VIEW,
-	PROJECTOR_VIEW
-};
-
 enum class SphereRenderType {
 	WIREFRAME,
 	TEXTURE,
@@ -30,16 +25,11 @@ class SubWindowData : public BaseWindowData {
 public:
 	SubWindowData(int id, ci::app::WindowRef theWindow, ProjectorRef projector);
 
-	void setupParamsList();
-
 	bool isMainWindow() { return false; }
 
 	int mId;
-	ViewState mViewState = ViewState::PROJECTOR_VIEW;
+
 	SphereRenderType mSphereRenderType = SphereRenderType::SYPHON_FRAME;
 
-	ci::CameraPersp mCamera;
-	ci::CameraUi mCameraUi;
 	ProjectorRef mProjector;
-	ci::params::InterfaceGlRef mParams;
 };

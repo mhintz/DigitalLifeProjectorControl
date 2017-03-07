@@ -1,5 +1,6 @@
 #include <memory>
 #include <map>
+#include <algorithm>
 
 #include "Syphon.h"
 
@@ -35,6 +36,9 @@ class DigitalLifeProjectorControlApp : public App {
 	void keyDown(KeyEvent evt) override;
 	void update() override;
 	void draw() override;
+	void drawSphere(SphereRenderType sphereType);
+
+	void setupViewParams(params::InterfaceGlRef theParams);
 
 	void createNewWindow();
 	void closeThisWindow();
@@ -47,6 +51,14 @@ class DigitalLifeProjectorControlApp : public App {
 	vector<ProjectorRef> mProjectorParams;
 	std::map<int, int> mProjectorWindowMap;
 	params::InterfaceGlRef mMenu;
+
+	ProjectorRef getProjectorForWindow(int windowId);
+	vector<SubWindowData *> getSubWindowDataVec();
+
+	// Main window params
+	SphereRenderType mSphereRenderType = SphereRenderType::TEXTURE;
+	ci::CameraPersp mCamera;
+	ci::CameraUi mCameraUi;
 
 	ciSyphon::ClientRef mSyphonClient;
 	gl::TextureRef mLatestFrame;
@@ -63,6 +75,7 @@ class DigitalLifeProjectorControlApp : public App {
 
 void DigitalLifeProjectorControlApp::prepSettings(Settings * settings) {
 	settings->setTitle("Main Config Window");
+	settings->setWindowSize(1200, 800);
 }
 
 void DigitalLifeProjectorControlApp::setup() {
@@ -77,6 +90,12 @@ void DigitalLifeProjectorControlApp::setup() {
 	}
 
 	mMenu = params::InterfaceGl::create(getWindow(), "Params", toPixels(ivec2(400, getWindowHeight() - 40)));
+
+	setupViewParams(mMenu);
+
+	mCamera.setAspectRatio(getWindowAspectRatio());
+	mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
+	mCameraUi = CameraUi(& mCamera, getWindow());
 
 	mSyphonClient = ciSyphon::Client::create();
 	mSyphonClient->set("DigitalLifeServer", "DigitalLifeClient");
@@ -126,15 +145,28 @@ void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
 	}
 }
 
+ProjectorRef DigitalLifeProjectorControlApp::getProjectorForWindow(int windowId) {
+	// Find the first projector ID that matches the provided window id
+	auto projMapPosition = std::find_if(mProjectorWindowMap.begin(), mProjectorWindowMap.end(), [=] (std::pair<int, int> const & element) { return element.second == windowId; });
+	// Find the projector reference in the array of projector refs based on the returned projector map position
+	auto projVecPosition = std::find_if(mProjectorParams.begin(), mProjectorParams.end(), [=] (ProjectorRef const & proj) { return proj->getId() == projMapPosition->first; });
+	return * projVecPosition;
+}
+
+vector<SubWindowData *> DigitalLifeProjectorControlApp::getSubWindowDataVec() {
+	vector<SubWindowData *> dataVec;
+	for (int winIdx = 1; winIdx < getNumWindows(); winIdx++) {
+		dataVec.push_back(getWindowIndex(winIdx)->getUserData<SubWindowData>());
+	}
+	std::sort(dataVec.begin(), dataVec.end(), [] (SubWindowData * winA, SubWindowData * winB) { return winA->mProjector->getId() < winB->mProjector->getId(); });
+	return std::move(dataVec);
+}
+
 void DigitalLifeProjectorControlApp::createNewWindow() {
 	ProjectorRef newWindowProj;
 	if (mProjectorWindowMap.size() > getNumWindows() - 1) { // Subtract 1 for the main window
 		// Find the first projector ID that has no window assigned
-		auto projMapPosition = std::find_if(mProjectorWindowMap.begin(), mProjectorWindowMap.end(), [] (std::pair<int, int> const & element) { return element.second == -1; });
-		// Find the projector reference by id
-		auto projVecPosition = std::find_if(mProjectorParams.begin(), mProjectorParams.end(), [& projMapPosition] (ProjectorRef const & proj) { return proj->getId() == projMapPosition->first; });
-		// Assign the projector reference as the projector for the new window
-		newWindowProj = * projVecPosition;
+		newWindowProj = getProjectorForWindow(-1);
 	} else {
 		// Create a new projector config
 		// Note: the only way to "delete" a projector from the config is to manually edit the saved params file
@@ -153,6 +185,7 @@ void DigitalLifeProjectorControlApp::createNewWindow() {
 	app::WindowRef newWindow = createWindow(Window::Format());
 	newWindow->setUserData<SubWindowData>(new SubWindowData(mNumWindowsCreated, newWindow, newWindowProj));
 	mNumWindowsCreated += 1;
+	setupViewParams(mMenu);
 }
 
 void DigitalLifeProjectorControlApp::closeThisWindow() {
@@ -163,11 +196,14 @@ void DigitalLifeProjectorControlApp::closeThisWindow() {
 	} else {
 		// If a subwindow is closed, decouple the associated projector from the subwindow assignment
 		// But the projector stays in the array of projectors, and its id stays in the map
+		// The only way to delete a projector once it's been saved to the params file is to manually edit the params file
 		SubWindowData * windowUserData = theWindow->getUserData<SubWindowData>();
 
 		mProjectorWindowMap[windowUserData->mProjector->getId()] = -1;
 
 		theWindow->close();
+
+		setupViewParams(mMenu);
 	}
 }
 
@@ -209,7 +245,22 @@ void DigitalLifeProjectorControlApp::draw()
 	gl::clear(Color(0, 0, 0));
 
 	if (thisWindow->getUserData<BaseWindowData>()->isMainWindow()) {
+		// Rendering for the main window
+
 		gl::ScopedFaceCulling scpCull(false);
+
+		gl::ScopedMatrices scpMat;
+
+		gl::setMatrices(mCamera);
+
+		drawSphere(mSphereRenderType);
+
+		gl::ScopedColor scpColor(Color(0.2, 0.4, 0.8));
+		gl::draw(geom::WirePlane().subdivisions(ivec2(10, 10)).size(vec2(10.0, 10.0)));
+
+		for (auto winData : getSubWindowDataVec()) {
+			winData->mProjector->draw();
+		}
 
 		mMenu->draw();
 
@@ -219,58 +270,174 @@ void DigitalLifeProjectorControlApp::draw()
 			// gl::draw(mLatestFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 		}
 	} else {
+		// Rendering for the sub windows
+
 		SubWindowData * windowUserData = thisWindow->getUserData<SubWindowData>();
 
-		gl::ScopedFaceCulling scpCull(windowUserData->mViewState == ViewState::PROJECTOR_VIEW, GL_BACK);
+		if (!windowUserData) {
+			console() << "ERROR: window has no data to be used for rendering" << std::endl;
+			return;
+		}
+
+		gl::ScopedFaceCulling scpCull(true, GL_BACK);
 
 		gl::ScopedMatrices scpMat;
 
-		if (windowUserData->mViewState == ViewState::EXTERNAL_VIEW) {
-			gl::setMatrices(windowUserData->mCamera);
-		} else if (windowUserData->mViewState == ViewState::PROJECTOR_VIEW) {
-			gl::setViewMatrix(windowUserData->mProjector->getViewMatrix());
-			gl::setProjectionMatrix(windowUserData->mProjector->getProjectionMatrix());
-		}
+		gl::setViewMatrix(windowUserData->mProjector->getViewMatrix());
+		gl::setProjectionMatrix(windowUserData->mProjector->getProjectionMatrix());
 
-		if (windowUserData->mSphereRenderType == SphereRenderType::WIREFRAME) {
-			gl::ScopedColor scpColor(Color(1, 0, 0));
-			gl::ScopedPolygonMode scpPoly(GL_LINE);
-			gl::draw(mScanSphereMesh);
-		} else if (windowUserData->mSphereRenderType == SphereRenderType::TEXTURE) {
-			gl::ScopedGlslProg scpShader(gl::getStockShader(gl::ShaderDef().texture(mScanSphereTexture)));
-			gl::ScopedTextureBind scpTex(mScanSphereTexture);
-			gl::draw(mScanSphereMesh);
-		} else if (windowUserData->mSphereRenderType == SphereRenderType::PROJECTOR_COVERAGE) {
-			vector<ProjectorUploadData> projectorList(getNumWindows());
-			for (int winIdx = 0; winIdx < getNumWindows(); winIdx++) {
-				ProjectorRef const & proj = getWindowIndex(winIdx)->getUserData<SubWindowData>()->mProjector;
-				projectorList[winIdx] = ProjectorUploadData(proj->getWorldPos(), proj->getTarget(), proj->getColor());
+		drawSphere(windowUserData->mSphereRenderType);
+	}
+}
+
+void DigitalLifeProjectorControlApp::drawSphere(SphereRenderType sphereType) {
+	// Draw the sphere
+	if (sphereType == SphereRenderType::WIREFRAME) {
+		gl::ScopedColor scpColor(Color(1, 0, 0));
+		gl::ScopedPolygonMode scpPoly(GL_LINE);
+		gl::draw(mScanSphereMesh);
+	} else if (sphereType == SphereRenderType::TEXTURE) {
+		gl::ScopedGlslProg scpShader(gl::getStockShader(gl::ShaderDef().texture(mScanSphereTexture)));
+		gl::ScopedTextureBind scpTex(mScanSphereTexture);
+		gl::draw(mScanSphereMesh);
+	} else if (sphereType == SphereRenderType::PROJECTOR_COVERAGE) {
+		vector<ProjectorUploadData> projectorList;
+		for (auto winData : getSubWindowDataVec()) {
+			projectorList.emplace_back(winData->mProjector->getWorldPos(), winData->mProjector->getTarget(), winData->mProjector->getColor());
+		}
+		gl::UboRef projectorsUbo = gl::Ubo::create(sizeof(ProjectorUploadData) * projectorList.size(), projectorList.data());
+
+		projectorsUbo->bindBufferBase(0);
+		mProjectorCoverageShader->uniformBlock("uProjectors", 0);
+		mProjectorCoverageShader->uniform("uNumProjectors", (int) projectorList.size());
+
+		gl::ScopedGlslProg scpShader(mProjectorCoverageShader);
+		gl::draw(mScanSphereMesh);
+	} else if (sphereType == SphereRenderType::SYPHON_FRAME) {
+		// TODO: Make it so that this view renders the combined influence of all projectors on the object (in the external view but not the projector view)
+		gl::ScopedGlslProg scpShader(mSyphonFrameAsCubeMapRenderShader);
+		mSyphonFrameAsCubeMapRenderShader->uniform("uCubeMapTex", 0);
+		// mSyphonFrameAsCubeMapRenderShader->uniform("uProjectorPos", windowUserData->mProjector->getWorldPos());
+		gl::ScopedTextureBind scpTex(mFrameDestinationCubeMap->getColorTex(), 0);
+		gl::draw(mScanSphereMesh);
+	}
+}
+
+void DigitalLifeProjectorControlApp::setupViewParams(params::InterfaceGlRef theParams) {
+	// Clear the params first - this makes this function idempotent, so it can be called whenever a window is added or removed
+	theParams->clear();
+
+	theParams->addParam("Main View Render Mode", {
+		"Wireframe",
+		"Texture",
+		"Projector Coverage",
+		"Syphon Frame"
+	}, [this] (int renderMode) {
+		switch (renderMode) {
+			case 0: mSphereRenderType = SphereRenderType::WIREFRAME; break;
+			case 1: mSphereRenderType = SphereRenderType::TEXTURE; break;
+			case 2: mSphereRenderType = SphereRenderType::PROJECTOR_COVERAGE; break;
+			case 3: mSphereRenderType = SphereRenderType::SYPHON_FRAME; break;
+			default: console() << "ERROR: invalid render mode parameter provided" << std::endl; break;
+		}
+	}, [this] () {
+		switch (mSphereRenderType) {
+			case SphereRenderType::WIREFRAME : return 0;
+			case SphereRenderType::TEXTURE : return 1;
+			case SphereRenderType::PROJECTOR_COVERAGE : return 2;
+			case SphereRenderType::SYPHON_FRAME : return 3;
+		}
+	});
+
+	// Set up a params group for each (extra) window the app currently has open (starting at 1 because 0 is the main window)
+	for (auto windowData : getSubWindowDataVec()) {
+		// I really really hope C++ is smart enough to correctly destroy copies of this projector
+		// reference once the functions which capture it are deleted by InterfaceGl::clear()
+		// (I also hope InterfaceGl::clear() is smart enough to destroy all attached function objects)
+		// (I'm pretty sure both are the case)
+		ProjectorRef theProjector = getProjectorForWindow(windowData->mId);
+
+		// Just a lil sanity check
+		assert(theProjector == windowData->mProjector);
+
+		string pname = "P" + std::to_string(windowData->mProjector->getId());
+
+		theParams->addSeparator();
+
+		theParams->addText("Projector " + std::to_string(windowData->mProjector->getId()) + " - Window " + std::to_string(windowData->mId));
+
+		theParams->addParam(pname + " Render Mode", {
+			"Wireframe",
+			"Texture",
+			"Projector Coverage",
+			"Syphon Frame"
+		}, [windowData] (int renderMode) {
+			switch (renderMode) {
+				case 0: windowData->mSphereRenderType = SphereRenderType::WIREFRAME; break;
+				case 1: windowData->mSphereRenderType = SphereRenderType::TEXTURE; break;
+				case 2: windowData->mSphereRenderType = SphereRenderType::PROJECTOR_COVERAGE; break;
+				case 3: windowData->mSphereRenderType = SphereRenderType::SYPHON_FRAME; break;
+				default: app::console() << "ERROR: invalid render mode parameter provided" << std::endl; break;
 			}
-			gl::UboRef projectorsUbo = gl::Ubo::create(sizeof(ProjectorUploadData) * getNumWindows(), projectorList.data());
-
-			projectorsUbo->bindBufferBase(0);
-			mProjectorCoverageShader->uniformBlock("uProjectors", 0);
-			mProjectorCoverageShader->uniform("uNumProjectors", (int) getNumWindows());
-
-			gl::ScopedGlslProg scpShader(mProjectorCoverageShader);
-			gl::draw(mScanSphereMesh);
-		} else if (windowUserData->mSphereRenderType == SphereRenderType::SYPHON_FRAME) {
-			// TODO: Make it so that this view renders the combined influence of all projectors on the object (in the external view but not the projector view)
-			gl::ScopedGlslProg scpShader(mSyphonFrameAsCubeMapRenderShader);
-			mSyphonFrameAsCubeMapRenderShader->uniform("uCubeMapTex", 0);
-			mSyphonFrameAsCubeMapRenderShader->uniform("uProjectorPos", windowUserData->mProjector->getWorldPos());
-			gl::ScopedTextureBind scpTex(mFrameDestinationCubeMap->getColorTex(), 0);
-			gl::draw(mScanSphereMesh);
-		}
-
-		if (windowUserData->mViewState == ViewState::EXTERNAL_VIEW) {
-			gl::ScopedColor scpColor(Color(0.2, 0.4, 0.8));
-			gl::draw(geom::WirePlane().subdivisions(ivec2(10, 10)).size(vec2(10.0, 10.0)));
-
-			for (int winIdx = 0; winIdx < getNumWindows(); winIdx++) {
-				getWindowIndex(winIdx)->getUserData<SubWindowData>()->mProjector->draw();
+		}, [windowData] () {
+			switch (windowData->mSphereRenderType) {
+				case SphereRenderType::WIREFRAME : return 0;
+				case SphereRenderType::TEXTURE : return 1;
+				case SphereRenderType::PROJECTOR_COVERAGE : return 2;
+				case SphereRenderType::SYPHON_FRAME : return 3;
 			}
-		}
+		});
+
+		// Dividing by 10 makes the positioning more precise by that factor
+		// (precision and step functions don't work for this control)
+		theParams->addParam<vec3>(pname + " Position",
+			[theProjector] (vec3 projPos) {
+				theProjector->moveTo(projPos / 10.0f);
+			}, [theProjector] () {
+				return theProjector->getPos() * 10.0f;
+			});
+
+		theParams->addParam<bool>(pname + " Flipped",
+			[theProjector] (bool isFlipped) {
+				theProjector->setUpsideDown(isFlipped);
+			}, [theProjector] () {
+				return theProjector->getUpsideDown();
+			});
+
+		theParams->addParam<float>(pname + " Y Rotation",
+			[theProjector] (float rotation) {
+				theProjector->setYRotation(rotation);
+			}, [theProjector] () {
+				return theProjector->getYRotation();
+			}).min(-M_PI / 2).max(M_PI / 2).precision(4).step(0.001f);
+
+		theParams->addParam<float>(pname + " Horizontal FoV",
+			[theProjector] (float fov) {
+				theProjector->setHorFOV(fov);
+			}, [theProjector] () {
+				return theProjector->getHorFOV();
+			}).min(M_PI / 16.0f).max(M_PI * 3.0 / 4.0).precision(4).step(0.001f);
+
+		theParams->addParam<float>(pname + " Vertical FoV",
+			[theProjector] (float fov) {
+				theProjector->setVertFOV(fov);
+			}, [theProjector] () {
+				return theProjector->getVertFOV();
+			}).min(M_PI / 16.0f).max(M_PI * 3.0 / 4.0).precision(4).step(0.001f);
+
+		theParams->addParam<float>(pname + " Vertical Offset Angle",
+			[theProjector] (float angle) {
+				theProjector->setVertBaseAngle(angle);
+			}, [theProjector] () {
+				return theProjector->getVertBaseAngle();
+			}).min(0.0f).max(M_PI / 2.0f).precision(4).step(0.001f);
+
+		theParams->addParam<Color>(pname + " Color",
+			[theProjector] (Color color) {
+				theProjector->setColor(color);
+			}, [theProjector] () {
+				return theProjector->getColor();
+			});
 	}
 }
 

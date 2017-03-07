@@ -10,7 +10,8 @@ uniform samplerCube uCubeMapTex;
 uniform vec3 uProjectorPos;
 
 void main() {
-  vec3 normal = normalize(aWorldSpaceNormal);
-  float lightFactor = clamp(dot(normal, normalize(uProjectorPos - aWorldSpacePosition.xyz)), 0, 1);
-  FragColor = vec4(lightFactor * texture(uCubeMapTex, aCubeMapTexCoord).rgb, 1);
+  // vec3 normal = normalize(aWorldSpaceNormal);
+  // float lightFactor = clamp(dot(normal, normalize(uProjectorPos - aWorldSpacePosition.xyz)), 0, 1);
+  // FragColor = vec4(lightFactor * lightFactor * texture(uCubeMapTex, aCubeMapTexCoord).rgb, 1);
+  FragColor = texture(uCubeMapTex, aCubeMapTexCoord);
 }
