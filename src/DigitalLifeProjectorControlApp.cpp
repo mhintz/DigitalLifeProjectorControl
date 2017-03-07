@@ -72,7 +72,8 @@ class DigitalLifeProjectorControlApp : public App {
 	gl::VboMeshRef mScanSphereMesh;
 	gl::TextureRef mScanSphereTexture;
 	gl::GlslProgRef mProjectorCoverageShader;
-	gl::GlslProgRef mSyphonFrameAsCubeMapRenderShader;
+	gl::GlslProgRef mSyphonFrameAsCubeMapRenderShader_projector;
+	gl::GlslProgRef mSyphonFrameAsCubeMapRenderShader_external;
 };
 
 void DigitalLifeProjectorControlApp::prepSettings(Settings * settings) {
@@ -128,7 +129,16 @@ void DigitalLifeProjectorControlApp::setup() {
 	mScanSphereTexture = gl::Texture::create(loadImage(loadAsset("sphere_scan_2017_03_02/sphere_scan_2017_03_02.png")));
 
 	mProjectorCoverageShader = gl::GlslProg::create(loadAsset("projectorCoverage_v.glsl"), loadAsset("projectorCoverage_f.glsl"));
-	mSyphonFrameAsCubeMapRenderShader = gl::GlslProg::create(loadAsset("syphonFrameAsCubeMapRender_v.glsl"), loadAsset("syphonFrameAsCubeMapRender_f.glsl"));
+	auto syphonFrameOnModel_v = loadAsset("syphonFrameAsCubeMapRender_v.glsl");
+	auto syphonFrameOnModel_f = loadAsset("syphonFrameAsCubeMapRender_f.glsl");
+	mSyphonFrameAsCubeMapRenderShader_projector = gl::GlslProg::create(
+		gl::GlslProg::Format()
+			.vertex(syphonFrameOnModel_v).fragment(syphonFrameOnModel_f)
+	);
+	mSyphonFrameAsCubeMapRenderShader_external = gl::GlslProg::create(
+		gl::GlslProg::Format()
+			.vertex(syphonFrameOnModel_v).fragment(syphonFrameOnModel_f).define("EXTERNAL_VIEW")
+	);
 }
 
 void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
@@ -325,12 +335,30 @@ void DigitalLifeProjectorControlApp::drawSphere(SphereRenderType sphereType) {
 		gl::ScopedGlslProg scpShader(mProjectorCoverageShader);
 		gl::draw(mScanSphereMesh);
 	} else if (sphereType == SphereRenderType::SYPHON_FRAME) {
-		// TODO: Make it so that this view renders the combined influence of all projectors on the object (in the external view but not the projector view)
-		gl::ScopedGlslProg scpShader(mSyphonFrameAsCubeMapRenderShader);
-		mSyphonFrameAsCubeMapRenderShader->uniform("uCubeMapTex", 0);
-		// mSyphonFrameAsCubeMapRenderShader->uniform("uProjectorPos", windowUserData->mProjector->getWorldPos());
-		gl::ScopedTextureBind scpTex(mFrameDestinationCubeMap->getColorTex(), 0);
-		gl::draw(mScanSphereMesh);
+		if (getWindow()->getUserData<BaseWindowData>()->isMainWindow()) {
+			vector<ProjectorUploadData> projectorList;
+			for (auto winData : getSubWindowDataVec()) {
+				projectorList.emplace_back(winData->mProjector->getWorldPos(), winData->mProjector->getTarget(), winData->mProjector->getColor());
+			}
+			gl::UboRef projectorsUbo = gl::Ubo::create(sizeof(ProjectorUploadData) * projectorList.size(), projectorList.data());
+
+			projectorsUbo->bindBufferBase(0);
+			mSyphonFrameAsCubeMapRenderShader_external->uniformBlock("uProjectors", 0);
+			mSyphonFrameAsCubeMapRenderShader_external->uniform("uNumProjectors", (int) projectorList.size());
+
+			gl::ScopedGlslProg scpShader(mSyphonFrameAsCubeMapRenderShader_external);
+
+			mSyphonFrameAsCubeMapRenderShader_external->uniform("uCubeMapTex", 0);
+			gl::ScopedTextureBind scpTex(mFrameDestinationCubeMap->getColorTex(), 0);
+
+			gl::draw(mScanSphereMesh);
+		} else {
+			gl::ScopedGlslProg scpShader(mSyphonFrameAsCubeMapRenderShader_projector);
+			mSyphonFrameAsCubeMapRenderShader_projector->uniform("uCubeMapTex", 0);
+			mSyphonFrameAsCubeMapRenderShader_projector->uniform("uProjectorPos", getWindow()->getUserData<SubWindowData>()->mProjector->getWorldPos());
+			gl::ScopedTextureBind scpTex(mFrameDestinationCubeMap->getColorTex(), 0);
+			gl::draw(mScanSphereMesh);
+		}
 	}
 }
 

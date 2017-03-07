@@ -1,5 +1,7 @@
 #version 410
 
+#include "alphaBlend_m.glsl"
+
 in vec4 aWorldSpacePosition;
 in vec3 aWorldSpaceNormal;
 in vec3 aCubeMapTexCoord;
@@ -35,11 +37,7 @@ void main() {
 
   for (int idx = 0; idx < uNumProjectors; idx++) {
     float lightFactor = clamp(dot(normal, normalize(projectorList[idx].mPosition - aWorldSpacePosition.xyz)), 0, 1);
-    float alphaBase = baseColor.a;
-    vec3 premultBase = alphaBase * baseColor.rgb;
-    vec3 premultLight = lightFactor * projectorList[idx].mColor;
-    // Alpha blending, "over" method
-    baseColor = vec4(premultLight + premultBase * (1.0 - lightFactor), lightFactor + alphaBase * (1.0 - lightFactor));
+    baseColor = alphaBlend(baseColor, vec4(projectorList[idx].mColor, lightFactor));
   }
 
   baseColor.a = 1;
