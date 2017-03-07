@@ -16,18 +16,30 @@ enum class SphereRenderType {
 	SYPHON_FRAME
 };
 
-class WindowData {
+class BaseWindowData {
 public:
-	WindowData(uint32_t id, ci::app::WindowRef theWindow, ci::JsonTree paramData);
+	virtual bool isMainWindow() = 0;
+};
+
+class MainWindowData : public BaseWindowData {
+public:
+	bool isMainWindow() { return true; }
+};
+
+class SubWindowData : public BaseWindowData {
+public:
+	SubWindowData(int id, ci::app::WindowRef theWindow, ProjectorRef projector);
 
 	void setupParamsList();
 
-	uint32_t mId;
+	bool isMainWindow() { return false; }
+
+	int mId;
 	ViewState mViewState = ViewState::PROJECTOR_VIEW;
 	SphereRenderType mSphereRenderType = SphereRenderType::SYPHON_FRAME;
 
 	ci::CameraPersp mCamera;
 	ci::CameraUi mCameraUi;
-	Projector mProjector;
+	ProjectorRef mProjector;
 	ci::params::InterfaceGlRef mParams;
 };

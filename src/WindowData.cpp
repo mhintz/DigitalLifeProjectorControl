@@ -2,27 +2,11 @@
 
 using namespace ci;
 
-vec3 parseVector(JsonTree vec) {
-	return vec3(vec.getValueAtIndex<float>(0), vec.getValueAtIndex<float>(1), vec.getValueAtIndex<float>(2));
-}
-
-Color parseColor(JsonTree color) {
-	return Color(color.getValueAtIndex<float>(0), color.getValueAtIndex<float>(1), color.getValueAtIndex<float>(2));
-}
-
-Projector parseProjectorParams(JsonTree const & params) {
-	return Projector()
-		.setHorFOV(params.getValueForKey<float>("horFOV"))
-		.setVertFOV(params.getValueForKey<float>("vertFOV"))
-		.setVertBaseAngle(params.getValueForKey<float>("baseAngle"))
-		.moveTo(parseVector(params.getChild("position")))
-		.setUpsideDown(params.getValueForKey<bool>("isUpsideDown"))
-		.setYRotation(params.getValueForKey<float>("yRotation"))
-		.setColor(parseColor(params.getChild("color")));
-}
-
-WindowData::WindowData(uint32_t id, app::WindowRef theWindow, JsonTree paramData) {
+SubWindowData::SubWindowData(int id, app::WindowRef theWindow, ProjectorRef projector) {
 	mId = id;
+	mProjector = projector;
+
+	theWindow->setTitle("Window " + std::to_string(mId) + " - Projector " + std::to_string(mProjector->getId()));
 
 	mParams = params::InterfaceGl::create(theWindow, "Params", theWindow->toPixels(ivec2(200, theWindow->getHeight() - 20)));
 
@@ -33,17 +17,9 @@ WindowData::WindowData(uint32_t id, app::WindowRef theWindow, JsonTree paramData
 	mCamera.setAspectRatio(theWindow->getAspectRatio());
 	mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
 	mCameraUi = CameraUi(& mCamera, theWindow);
-
-	if (paramData.hasChildren()) {
-		mProjector = parseProjectorParams(paramData);
-	} else {
-		mProjector = getAcerP5515MinZoom();
-		vec3 randColor = glm::rgbColor(vec3(randFloat(360), 0.95, 0.95));
-		mProjector.moveTo(vec3(2, 0, randFloat() * 6.28)).setColor(Color(randColor.x, randColor.y, randColor.z));
-	}
 }
 
-void WindowData::setupParamsList() {
+void SubWindowData::setupParamsList() {
 	mParams->addParam("View Mode", {
 		"External View",
 		"Projector View"
@@ -90,50 +66,50 @@ void WindowData::setupParamsList() {
 	// (precision and step functions don't work for this control)
 	mParams->addParam<vec3>("Position",
 		[this] (vec3 projPos) {
-			mProjector.moveTo(projPos / 10.0f); },
+			mProjector->moveTo(projPos / 10.0f); },
 		[this] () {
-			return mProjector.getPos() * 10.0f;
+			return mProjector->getPos() * 10.0f;
 		});
 
 	mParams->addParam<bool>("Flipped",
 		[this] (bool isFlipped) {
-			mProjector.setUpsideDown(isFlipped); },
+			mProjector->setUpsideDown(isFlipped); },
 		[this] () {
-			return mProjector.getUpsideDown();
+			return mProjector->getUpsideDown();
 		});
 
 	mParams->addParam<float>("Y Rotation",
 		[this] (float rotation) {
-			mProjector.setYRotation(rotation); },
+			mProjector->setYRotation(rotation); },
 		[this] () {
-			return mProjector.getYRotation();
+			return mProjector->getYRotation();
 		}).min(-M_PI / 2).max(M_PI / 2).precision(4).step(0.001f);
 
 	mParams->addParam<float>("Horizontal FoV",
 		[this] (float fov) {
-			mProjector.setHorFOV(fov);
+			mProjector->setHorFOV(fov);
 		}, [this] () {
-			return mProjector.getHorFOV();
+			return mProjector->getHorFOV();
 		}).min(M_PI / 16.0f).max(M_PI * 3.0 / 4.0).precision(4).step(0.001f);
 
 	mParams->addParam<float>("Vertical FoV",
 		[this] (float fov) {
-			mProjector.setVertFOV(fov);
+			mProjector->setVertFOV(fov);
 		}, [this] () {
-			return mProjector.getVertFOV();
+			return mProjector->getVertFOV();
 		}).min(M_PI / 16.0f).max(M_PI * 3.0 / 4.0).precision(4).step(0.001f);
 
 	mParams->addParam<float>("Vertical Offset Angle",
 		[this] (float angle) {
-			mProjector.setVertBaseAngle(angle);
+			mProjector->setVertBaseAngle(angle);
 		}, [this] () {
-			return mProjector.getVertBaseAngle();
+			return mProjector->getVertBaseAngle();
 		}).min(0.0f).max(M_PI / 2.0f).precision(4).step(0.001f);
 
 	mParams->addParam<Color>("Color",
 		[this] (Color color) {
-			mProjector.setColor(color);
+			mProjector->setColor(color);
 		}, [this] () {
-			return mProjector.getColor();
+			return mProjector->getColor();
 		});
 }

@@ -3,6 +3,26 @@
 using namespace ci;
 using std::string;
 
+vec3 parseVector(JsonTree vec) {
+	return vec3(vec.getValueAtIndex<float>(0), vec.getValueAtIndex<float>(1), vec.getValueAtIndex<float>(2));
+}
+
+Color parseColor(JsonTree color) {
+	return Color(color.getValueAtIndex<float>(0), color.getValueAtIndex<float>(1), color.getValueAtIndex<float>(2));
+}
+
+Projector parseProjectorParams(JsonTree const & params) {
+	return Projector()
+		.setId(params.getValueForKey<int>("id"))
+		.setHorFOV(params.getValueForKey<float>("horFOV"))
+		.setVertFOV(params.getValueForKey<float>("vertFOV"))
+		.setVertBaseAngle(params.getValueForKey<float>("baseAngle"))
+		.moveTo(parseVector(params.getChild("position")))
+		.setUpsideDown(params.getValueForKey<bool>("isUpsideDown"))
+		.setYRotation(params.getValueForKey<float>("yRotation"))
+		.setColor(parseColor(params.getChild("color")));
+}
+
 JsonTree loadProjectorParams(app::App * theApp, string paramFileName) {
 	try {
 		return JsonTree(theApp->loadAsset(paramFileName));
@@ -32,6 +52,7 @@ JsonTree serializeColor(string name, Color color) {
 
 JsonTree serializeProjector(Projector const & proj) {
 	return JsonTree()
+		.addChild(JsonTree("id", proj.getId()))
 		.addChild(JsonTree("horFOV", proj.getHorFOV()))
 		.addChild(JsonTree("vertFOV", proj.getVertFOV()))
 		.addChild(JsonTree("baseAngle", proj.getVertBaseAngle()))
@@ -41,11 +62,11 @@ JsonTree serializeProjector(Projector const & proj) {
 		.addChild(serializeColor("color", proj.getColor()));
 }
 
-void saveProjectorParams(app::App * theApp, std::vector<WindowData *> const & theData, string paramFileName) {
+void saveProjectorParams(app::App * theApp, std::vector<ProjectorRef> const & theData, string paramFileName) {
 	JsonTree appParams;
 
-	for (auto & winData : theData) {
-		appParams.addChild(serializeProjector(winData->mProjector));
+	for (auto & proj : theData) {
+		appParams.addChild(serializeProjector(* proj));
 	}
 
 	string serializedParams = appParams.serialize();
