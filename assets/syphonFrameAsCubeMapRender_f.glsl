@@ -52,6 +52,7 @@ void main() {
 
     FragColor = vec4(baseColor.rgb, 1.0);
   #else
-    FragColor = getProjectorValue(normalize(uProjectorPos - aWorldSpacePosition.xyz), normal, texture(uCubeMapTex, aCubeMapTexCoord));
+    // FragColor = getProjectorValue(normalize(uProjectorPos - aWorldSpacePosition.xyz), normal, texture(uCubeMapTex, aCubeMapTexCoord));
+    FragColor = texture(uCubeMapTex, aCubeMapTexCoord);
   #endif
 }
