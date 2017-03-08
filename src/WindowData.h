@@ -28,9 +28,8 @@ public:
 	bool isMainWindow() { return false; }
 
 	int mId;
+	ProjectorRef mProjector;
 
 	bool mRenderArrow = false;
 	SphereRenderType mSphereRenderType = SphereRenderType::TEXTURE;
-
-	ProjectorRef mProjector;
 };
