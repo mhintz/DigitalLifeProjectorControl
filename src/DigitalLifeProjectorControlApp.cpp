@@ -29,39 +29,44 @@ struct ProjectorUploadData {
 };
 
 class DigitalLifeProjectorControlApp : public App {
-  public:
+public:
+	// App functions
 	static void prepSettings(Settings * settings);
 
 	void setup() override;
-	void keyDown(KeyEvent evt) override;
 	void update() override;
 	void draw() override;
+	void keyDown(KeyEvent evt) override;
 
+	// Drawing commands
 	void drawSphere(SphereRenderType sphereType);
 	void renderProjectorAlignmentView();
 
+	// Main params list function
 	void setupViewParams(params::InterfaceGlRef theParams);
 
+	// Window and projector data management and helpers
 	void createNewWindow();
 	void closeThisWindow();
+	ProjectorRef getProjectorForWindow(int windowId);
+	vector<SubWindowData *> getSubWindowDataVec();
 
 	int mNumWindowsCreated = 0;
 	uint32_t mDestinationCubeMapSide = 1600;
 	string mParamsFile = "projectorControlParams.json";
 
+	// Params and windows management
 	JsonTree mParamsTree;
 	vector<ProjectorRef> mProjectorParams;
 	std::map<int, int> mProjectorWindowMap;
 	params::InterfaceGlRef mMenu;
 
-	ProjectorRef getProjectorForWindow(int windowId);
-	vector<SubWindowData *> getSubWindowDataVec();
-
-	// Main window params
+	// Main window render stuff
 	SphereRenderType mSphereRenderType = SphereRenderType::TEXTURE;
 	ci::CameraPersp mCamera;
 	ci::CameraUi mCameraUi;
 
+	// Syphon input
 	ciSyphon::ClientRef mSyphonClient;
 	gl::TextureRef mLatestFrame;
 	FboCubeMapLayeredRef mFrameDestinationCubeMap;
@@ -69,6 +74,7 @@ class DigitalLifeProjectorControlApp : public App {
 	gl::GlslProgRef mFrameToCubeMapConvertShader;
 	gl::BatchRef mFrameToCubeMapConvertBatch;
 
+	// Objects for rendering
 	gl::VboMeshRef mScanSphereMesh;
 	gl::TextureRef mScanSphereTexture;
 	gl::GlslProgRef mProjectorCoverageShader;
