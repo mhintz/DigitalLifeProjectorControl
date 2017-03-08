@@ -173,6 +173,8 @@ void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
 		createNewWindow();
 	} else if (evt.getCode() == KeyEvent::KEY_w) {
 		closeThisWindow();
+	} else if (evt.getCode() == KeyEvent::KEY_f) {
+		setFullScreen(!isFullScreen());
 	} else if (evt.getCode() == KeyEvent::KEY_m) {
 		mMenu->show(!mMenu->isVisible());
 	} else if (evt.getCode() == KeyEvent::KEY_s) {
