@@ -152,14 +152,23 @@ void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
 		quit();
 	} else if (evt.getCode() == KeyEvent::KEY_n) {
 		createNewWindow();
-	} else if (evt.getCode() == KeyEvent::KEY_f) {
-		setFullScreen(!isFullScreen());
 	} else if (evt.getCode() == KeyEvent::KEY_w) {
 		closeThisWindow();
 	} else if (evt.getCode() == KeyEvent::KEY_m) {
 		mMenu->show(!mMenu->isVisible());
 	} else if (evt.getCode() == KeyEvent::KEY_s) {
 		saveProjectorParams(this, mProjectorParams, mParamsFile);
+	} else if (evt.isAltDown() && evt.isMetaDown() && evt.getChar() >= '0' && evt.getChar() <= '9') {
+		size_t displayNum = evt.getChar() - '0';
+		auto displayList = Display::getDisplays();
+		if (displayNum >= displayList.size()) {
+			console() << "ERROR: Not enough displays connected to send window there" << std::endl;
+		} else {
+			app::FullScreenOptions screenOpt = app::FullScreenOptions()
+				.display(displayList[displayNum]);
+			setFullScreen(true, screenOpt);
+			console() << "sent window to display: " << displayNum << std::endl;
+		}
 	}
 }
 
