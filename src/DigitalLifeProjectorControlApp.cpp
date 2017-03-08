@@ -539,7 +539,7 @@ void DigitalLifeProjectorControlApp::setupViewParams(params::InterfaceGlRef theP
 				theProjector->setYRotation(rotation);
 			}, [theProjector] () {
 				return theProjector->getYRotation();
-			}).min(-M_PI / 2).max(M_PI / 2).precision(4).step(0.001f);
+			}).min(-M_PI / 2).max(M_PI / 2).precision(4).step(0.0002f);
 
 		theParams->addParam<float>(pname + " Horizontal FoV",
 			[theProjector] (float fov) {
