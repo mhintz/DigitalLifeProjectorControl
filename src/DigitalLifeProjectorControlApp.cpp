@@ -51,6 +51,9 @@ public:
 	ProjectorRef getProjectorForWindow(int windowId);
 	vector<SubWindowData *> getSubWindowDataVec();
 
+	// Syphon stuff
+	void setupSyphonCxn(std::vector<ciSyphon::ServerDescription> announcedServerList);
+
 	int mNumWindowsCreated = 0;
 	uint32_t mDestinationCubeMapSide = 1600;
 	string mParamsFile = "projectorControlParams.json";
@@ -67,6 +70,7 @@ public:
 	ci::CameraUi mCameraUi;
 
 	// Syphon input
+	ciSyphon::ServerDirectory mSyphonServerDir;
 	ciSyphon::ClientRef mSyphonClient;
 	gl::TextureRef mLatestFrame;
 	FboCubeMapLayeredRef mFrameDestinationCubeMap;
@@ -106,8 +110,12 @@ void DigitalLifeProjectorControlApp::setup() {
 	mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
 	mCameraUi = CameraUi(& mCamera, getWindow());
 
+	// TODO: Figure out why connecting to the server after this event's been fired doesn't work, and fix it (see also setupSyphonCxn)
+	// mSyphonServerDir.setup();
+	// mSyphonServerDir.getServerAnnouncedSignal()->connect([this] (vector<ciSyphon::ServerDescription> servers) { this->setupSyphonCxn(servers); });
+
 	mSyphonClient = ciSyphon::Client::create();
-	mSyphonClient->set("DigitalLifeServer", "DigitalLifeClient");
+	mSyphonClient->set("DigitalLifeServer", "DigitalLifeClient"); // Just in case the server is already there
 	mSyphonClient->setup();
 
 	mFrameDestinationCubeMap = FboCubeMapLayered::create(mDestinationCubeMapSide, mDestinationCubeMapSide, FboCubeMapLayered::Format().depth(false));
@@ -145,6 +153,17 @@ void DigitalLifeProjectorControlApp::setup() {
 		gl::GlslProg::Format()
 			.vertex(syphonFrameOnModel_v).fragment(syphonFrameOnModel_f).define("EXTERNAL_VIEW")
 	);
+}
+
+void DigitalLifeProjectorControlApp::setupSyphonCxn(std::vector<ciSyphon::ServerDescription> announcedServerList) {
+	for (auto & server : announcedServerList) {
+		// if (server.mServerName == "DigitalLifeServer") {
+		// 	console() << "reset client" << std::endl;
+		// 	mSyphonClient = ciSyphon::Client::create();
+		// 	mSyphonClient->setup();
+		// 	mSyphonClient->set(server);
+		// }
+	}
 }
 
 void DigitalLifeProjectorControlApp::keyDown(KeyEvent evt) {
